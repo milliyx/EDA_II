@@ -1,0 +1,45 @@
+@options
+@packages
+-encoding
+'UTF-8'
+-protected
+-source
+'18'
+-sourcepath
+'/Users/SamChong/NetBeansProjects/Grupo_10_Proyecto1_Equipo8/src/main/java'
+-author
+-bottom
+'Copyright &#169; 2022. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/Users/SamChong/NetBeansProjects/Grupo_10_Proyecto1_Equipo8/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'Grupo_10_Proyecto1_Equipo8 1.0-SNAPSHOT API'
+-use
+-version
+-windowtitle
+'Grupo_10_Proyecto1_Equipo8 1.0-SNAPSHOT API'
+com.fi.edaii.grupo_10_proyecto1_equipo8
+/Users/SamChong/NetBeansProjects/Grupo_10_Proyecto1_Equipo8/src/main/java/.DS_Store = 1670145117066
+/Users/SamChong/NetBeansProjects/Grupo_10_Proyecto1_Equipo8/src/main/java = 1670145117064
+/Users/SamChong/NetBeansProjects/Grupo_10_Proyecto1_Equipo8/target/site/apidocs/tag-search-index.js = 1670148055692
+/Users/SamChong/NetBeansProjects/Grupo_10_Proyecto1_Equipo8/target/site/apidocs/overview-tree.html = 1670148055681
+/Users/SamChong/NetBeansProjects/Grupo_10_Proyecto1_Equipo8/target/site/apidocs/module-search-index.js = 1670148055691
+/Users/SamChong/NetBeansProjects/Grupo_10_Proyecto1_Equipo8/target/site/apidocs/index.html = 1670148055700
+/Users/SamChong/NetBeansProjects/Grupo_10_Proyecto1_Equipo8/target/site/apidocs/package-search-index.js = 1670148055691
+/Users/SamChong/NetBeansProjects/Grupo_10_Proyecto1_Equipo8/target/site/apidocs/jquery-ui.overrides.css = 1670148055709
+/Users/SamChong/NetBeansProjects/Grupo_10_Proyecto1_Equipo8/target/site/apidocs/serialized-form.html = 1670148055664
+/Users/SamChong/NetBeansProjects/Grupo_10_Proyecto1_Equipo8/target/site/apidocs/index-all.html = 1670148055699
+/Users/SamChong/NetBeansProjects/Grupo_10_Proyecto1_Equipo8/target/site/apidocs/allpackages-index.html = 1670148055690
+/Users/SamChong/NetBeansProjects/Grupo_10_Proyecto1_Equipo8/target/site/apidocs/member-search-index.js = 1670148055691
+/Users/SamChong/NetBeansProjects/Grupo_10_Proyecto1_Equipo8/target/site/apidocs/copy.svg = 1670148055704
+/Users/SamChong/NetBeansProjects/Grupo_10_Proyecto1_Equipo8/target/site/apidocs/script.js = 1670148055704
+/Users/SamChong/NetBeansProjects/Grupo_10_Proyecto1_Equipo8/target/site/apidocs/stylesheet.css = 1670148055703
+/Users/SamChong/NetBeansProjects/Grupo_10_Proyecto1_Equipo8/target/site/apidocs/help-doc.html = 1670148055702
+/Users/SamChong/NetBeansProjects/Grupo_10_Proyecto1_Equipo8/target/site/apidocs/element-list = 1670148055654
+/Users/SamChong/NetBeansProjects/Grupo_10_Proyecto1_Equipo8/target/site/apidocs/allclasses-index.html = 1670148055689
+/Users/SamChong/NetBeansProjects/Grupo_10_Proyecto1_Equipo8/target/site/apidocs/type-search-index.js = 1670148055691
+/Users/SamChong/NetBeansProjects/Grupo_10_Proyecto1_Equipo8/target/site/apidocs/search.js = 1670148055705

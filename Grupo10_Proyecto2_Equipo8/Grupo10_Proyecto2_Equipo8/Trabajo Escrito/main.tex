@@ -1,0 +1,691 @@
+\documentclass{article}
+\setlength{\parindent}{0pt}
+\usepackage[spanish]{babel}
+\spanishdecimal{.}
+\usepackage{colortbl}
+
+% Set page size and margins
+% Replace `letterpaper' with`a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{subcaption}
+\usepackage{framed,graphicx,xcolor}
+\usepackage{float}
+\usepackage[T1]{fontenc}
+\usepackage{array}
+\usepackage{eufrak}
+\usepackage{booktabs}
+\usepackage{framed}
+\usepackage{color}
+\usepackage{wrapfig}\definecolor{shadecolor}{RGB}{224,238,238}
+\usepackage[spanish]{babel}
+\usepackage[T1]{fontenc} 
+\usepackage{tcolorbox}
+%=========================================================================================================================================
+%=========================================================================================================================================
+\begin{document}
+
+\thispagestyle{empty}
+\begin{titlepage}
+\centering
+\begin{center}
+\begin{tabular}{c c}
+\includegraphics[width=0.25\textwidth]{fif.jpg}\hspace{5cm}&\hspace{6cm}\includegraphics[width=0.25\textwidth]{gg.png}\\
+\end{tabular}
+\end{center}
+
+{\bfseries\LARGE Universidad Nacional Autónoma de México \par}
+\vspace{1cm}
+{\scshape\Large Facultad de Ingeniería \par}
+{\scshape\Large Estructura De Datos y Algoritmos II \par}
+\vspace{2cm}
+{\scshape\Large Proyecto 2: \par}
+{\scshape\Large Programación paralela \par}
+\vfill
+{\scshape\Large Profesor: \par}
+{\Large Edgar Tista García \par}
+\vfill
+{\scshape\Large Equipo: 8 \par}
+\vfill
+{\scshape\Large Integrantes: \par}
+{\Large Barrios Aguilar Dulce Michelle \par}
+{\Large Chong Hernández Samuel \par}
+{\Large Mendoza Hernández Carlos Emiliano \par}
+\vfill
+{\Large Semestre 2023-1\par}
+\vfill
+{\Large 9 de enero de 2023 \par}
+\end{titlepage}
+%=======================================================================================
+\newpage
+\color{black}
+\tableofcontents
+\newpage 
+\section{Objetivos}
+\subsection{Objetivo general}
+Que el alumno ponga en práctica los conceptos de la programación paralela a través de la implementación de un algoritmo paralelo, así mismo desarrolle su capacidad para responder 
+preguntas acerca de un concepto analizado a profundidad.
+
+\subsection{Objetivo del equipo}
+Ratificar los conocimientos adquiridos sobre procesos paralelos mediante la exposición del diseño, análisis e implementación de un algoritmo en su versión paralela versus su versión secuencial. Hacer énfasis en la teoría del paralelismo de uno o varios procesos mediante definiciones y ejemplos para una mejor comprensión, logrando de esta manera distinguir si existe una mejora o no al paralelizar el algoritmo en cuestión. \\
+
+De igual manera, llevar a cabo satisfactoriamente el trabajo colaborativo para la realización de este proyecto. 
+%=======================================================================================
+\section{Introducción}
+Para darle solución a un problema debemos analizarlo extrayendo toda la información posible para ajustar las necesidades del método resolutivo y generar a partir de dichas necesidades las diferentes alternativas para su solución, diseñando de esta manera la que mejor se ajusta y comenzar a implementarla, siempre procurando cumplir con dos de los aspectos más importantes en nuestro campo: eficacia y eficiencia del programa. Sin darnos cuenta, la mayoría de las veces terminamos dando una solución al problema de programación realizando un programa secuencial en donde las instrucciones se realizan una tras otra.\\
+
+El paralelismo es una manera novedosa de solucionar problemas de programación en los que se requieren tiempo elevado de cómputo. En un programa paralelo se tienen acciones que se pueden realizar de una forma simultánea, pero ejecutándose de forma independiente por diferentes unidades de procesamiento mediante una red de comunicación por lo que se requiere de una computadora que tenga 2 o más unidades de procesamiento.\\
+
+La razón de existir de la programación paralela es encontrar una mejora respecto a la programación secuencial aumentando de esta manera la velocidad en ejecución reduciendo en tamaño en cuanto al producto informático y costos. Algunos algoritmos paralelizables representan una mejora considerable en la ejecución de un programa paralelo respecto a su contraparte secuencial. \\
+
+En el presente documento profundizaremos la paralelización del algoritmo Transformada rápida de Fourier que, se considera, uno de los descubrimientos más importantes de la segunda mitad del siglo XX, y su estudio e implementación ha permitido que se utilice permanentemente por casi todo dispositivo tecnológico que maneja cualquier tipo de información, tanto para transmitirla como para manipularla.
+\newpage
+\section{Antecedentes}
+\subsection{Algoritmo}
+Una vez realizado el análisis de un problema computacional, se debe de identificar el conjunto de entrada y salida para proceder al diseño de la solución, hablamos de la generación del algoritmo.\\
+
+Un algoritmo es una lista bien definida ordenada y finita de instrucciones que dado un estado inicial y una entrada a través de pasos sucesivos y bien definidos se llega a un estado final obteniendo una solución del problema computacional.\\
+
+\textbf{Características más importantes de un algoritmo}
+\begin{itemize}
+    \item \textbf{Preciso}: pasos ncecesarios y sin renudar procesos inncesarios.
+    \item \textbf{Finito}: determinado número de instrucciones
+    \item \textbf{Definido}: no debe ser ambiguo (dobles interpretaciones).
+    \item \textbf{Efectivo}: debe de resolver el problema.
+    \item \textbf{Correcto}: debe cumplir con el objetivo esperado.
+    \item \textbf{Eficiente}: debe seralizarse en el menor tiempo posible. 
+\end{itemize}
+Ya que hablamos de caracteristicas que nos conciernen como que sea finito y eficiente, es necesario hablar de la \textbf{complejidad}. 
+
+\subsection{Complejidad}
+
+
+Cuando hablamos de complejidad, sabemos que su principal propósito es analizar el comportamiento de los algoritmos que permiten resolver un problema y determinar la \textbf{eficiencia} basándose en 2 objetivos fundamentales:
+\begin{itemize}
+    \item Medir o estimar la cantidad de recursos necesarios para resolver problemas computacionales.
+    \item Clasificar algoritmos de acuerdo a su dificultad computacional.
+\end{itemize}
+
+El tiempo empleado por el algoritmo se mide en instrucciones, independientemente del software, compilador o lenguaje de programación que influya en el análisis. De esta manera, el coste depende del tamaño de los datos. En la evaluación del coste, se toman en consideración tres posibles casos:
+\begin{itemize}
+    \item Coste promedio
+    \item Coste mejor
+    \item Coste peor
+\end{itemize}
+
+El tiempo requerido por un algoritmo es función del tamaño de los datos, por esta razón, la complejidad se expresa de la siguiente manera:
+$$
+T(n)
+$$
+\\
+Sin embargo , la notación más común es la Big-O:
+$$
+f(n) = O(g(n))
+$$
+A grandes rasgos, podemos identificar 4 tipos de comportamientos:
+\begin{itemize}
+    \item Lineal: muestran un comportamiento predecible, si se duplica el tamaño de la entrada, se requerirá el doble de tiempo para resolverlos.
+    \item Logarítmico: permiten atacar problemas muy grandes, ya que una entrada de doble de tamaño solo requiere un poco más de tiempo.
+    \item Polinomial: representan un punto intermedio entre lo posible y no posible , la mayor parte de los casos se podrán resopver satisfactoriamente para entradas suficientemente grandes
+    \item Exponencial: solamente funciona para entradas muy pequeñas
+\end{itemize}
+
+De manera creciente, la clasificación de la categoría de complejidad O-grande es la siguiente:\\
+\begin{wrapfigure}[0]{r}{0.5\textwidth}
+\vspace{-15pt}
+\begin{shaded}
+\textbf{\begin{center}
+    Es importante determinar los valores\\
+        frontera de un algoritmo
+\end{center}}
+\begin{itemize}
+    \item \textbf{Peor Caso:} el que exige más recursos para ser resuelto
+    \item \textbf{Caso Promedio:} tiempo aproximado para un ejemplar típico. Se calcula la media del tiempo para todos los posibles ejemplares de tamaño n asumiendo distribución uniforme
+    \item \textbf{Mejor Caso:} aquella instancia que requiere menos recursos
+\end{itemize}
+\end{shaded}
+\end{wrapfigure}
+\begin{figure}[h]
+\includegraphics[width=0.45\textwidth]{p2.jpg}
+\end{figure}
+
+\begin{figure}[h]
+\includegraphics[width=1\textwidth]{p3.png}
+\end{figure}
+\subsection{Paralelismo}
+
+Esta técnica se basa en el principio de que ciertas tareas se pueden dividir en partes más pequeñas que se pueden resolver simultáneamente. La computación paralela se ha convertido en el paradigma dominante en la fabricación de procesadores, por lo que es fundamental conocer no solo las aplicaciones actuales de esta forma de computación sino también su relevancia en el futuro.\\
+
+La computación paralela es el uso de múltiples recursos informáticos para resolver un problema. Se diferencia de la computación secuencial en que pueden ocurrir múltiples operaciones al mismo tiempo.\\
+
+\textbf{Ventajas del paralelismo}
+\begin{itemize}
+    \item Resuelve problemas que no se podrían realizar en una sola CPU
+    \item Resuelve problemas que no se pueden resolver en un tiempo razonable
+    \item Permite ejecutar problemas de un orden y complejidad mayor
+    \item Permite ejecutar código de manera más rápida 
+    \item Permite la ejecución de varias instrucciones en simultáneo
+    \item Ofrece mejor balance entre rendimiento y costo que la computación secuencial
+    \item Gran expansión y escabilidad
+\end{itemize}
+
+\textbf{Desvetajas del paralelismo}
+\begin{itemize}
+    \item Altos costos por producción y mantenimiento
+    \item Número de componentes usados es directamente proporcional a los fallos potenciales
+    \item Retardos ocasionados por comunicación ente tareas
+    \item Dificultad para lograr una buena sincronización y comunicación entre las tareas 
+    \item Mayor dificultad en las modificaciones del programa
+    \item Condiciones de carrera
+    \begin{itemize}
+        \item Múltiples procesos se encuentran en condición de carrera si el resultado de los mismos depende del orden de su llegada
+        \item Si los procesos que están en condición de carrera no son correctamente sincronizados, puede producirse una corrupción de datos 
+    \end{itemize}
+\end{itemize}
+\subsection{OpenMP}
+
+Es un interfaz de programación de aplicaciones (API) multiproceso portable, para computadoras paralelas que  tiene una arquitectura de memoria compartida formado por: 
+\begin{itemize}
+    \item Conjunto de directivas del compilador (ordenes abreviadas que instruyen al compilador  para insertar ordenes en el código fuente y realizar una acción en particular)
+    \item Biblioteca de funciones
+    \item  Variables de entorno
+\end{itemize}
+ 
+Para paralizar el programa hay que hacerlo de forma explícita, es decir el programador debe analizar y determinar qué problemas o partes del programa se pueden ejecutar simultáneamente para que se pueda usar un grupo de subprocesos para resolver el problema. \\
+
+OpenMp utiliza una arquitectura llamada fork-join, en la que se generan muchos subprocesos a partir del proceso o subproceso principal, que se utilizarán para soluciones paralelas denominadas regiones paralelas, que luego se unen solo al subproceso o proceso principal nuevamente. El programador especifica qué partes del programa requieren el número de subprocesos. Por lo tanto, se dice que OpenMP combina códigos seriales y paralelos.\\
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=.65\textwidth]{paralelismo.png}
+\end{figure}
+
+\subsection{Transformada de Fourier}
+
+La Transformada de Fourier permite analizar las funciones no periódicas. Complementa de esta manera a la Serie de Fourier, que permite analizar sistemas donde están involucradas las funciones periódicas y que podemos representarla en términos de sus componentes sinusoidales, cada componente con una frecuencia en particular.Conforme el período se incrementa, la frecuencia fundamental disminuye y las componentes relacionadas armónicamente se hacen más cercanas a la frecuencia.\\
+
+A medida que el periodo se hace infinito, las componentes de frecuencia forman un continuo y la suma de la serie de Fourier se convierte en una integral.
+$$
+\mathfrak{F}(x_{t})=\int_{-\infty }^{\infty}x_{t}e^{-j2\pi st}dt
+$$
+donde \textbf{j} representa la unidad imaginaria.\\
+
+Cuando hablamos de la descomposoción de señales, la transformada de Fourier ayuda a identificar los componentes simples, las ondas puras de la señal, ya que estas en conjunto forman la onda compleja.
+
+\begin{figure}[h]
+\includegraphics[width=1\textwidth]{p6.jpg}
+\end{figure}
+
+Visualmente, podemos imaginarlo como enrrollar una gráfica alrededor de un círculo con una frecuencia \textbf{F}, registrando en esta gráfica su centro de masa.
+
+La transformada de Fourier de una fución de intensidad versus tiempo es una función que no tiene como argumento al tiempo, sin embargo, toma una frecuencia, donde el valor que está función retorna es un número complejo en el plano complejo correspondiente a la fuerza de la frecuencia en la señal original. 
+
+\subsubsection{Transformada Discreta de Fourier}
+
+Toda señal puede ser representada por la suma de series de Fourier. Con un análisis adecuado es posible obtener una representación de Fourier para señales de duración finita. Esta representación es la que se conoce como la Transformada de Fourier Discreta (TFD). La TFD se puede representar como:
+$$
+x[k]=\sum_{n=0}^{N-1}x[n]W_{N}^{kn}
+$$
+
+donde $W_{N}=e^{-j^{\frac{2\pi}{N}}}$\\
+
+Se puede observar a simple vista que su resolución directa implica N multiplicaciones complejas y N-1
+adiciones complejas por cada k. Por lo tanto, el cálculo directo de una TFD es de orden $O(N^{2})$\\
+
+Para valores pequeños de N la resolución no conlleva mucho tiempo o gastos de recursos, pero para valores N lo suficientemente grandes el cálculo directo se torna poco eficiente, no sólo por el gran tiempo que
+consume sino también por el acaparamiento de los recursos necesarios.\\
+
+Se puede ver, entonces, que el orden del cálculo directo impone un límite en aquellas aplicaciones que hacen uso de la TFD, especialmente las de tiempo real, dado que para valores mayores a cierto N el cálculo podrá
+resultar demasiado lento y los recursos disponibles podrán ser insuficientes.
+
+Es así que aparece la Transformada Rápida de Fourier (en inglés Fast Fourier Transform, FFT), un algoritmo para el cálculo eficiente de la TFD. Su importancia radica en el hecho que elimina una gran parte de
+los cálculos repetitivos a los que se ve sometida la TFD, por lo que se logra un cálculo más rápido a menor costo.\\
+
+El algoritmo de la FFT fue originalmente inventado por Carl Friedrich Gauss en 1805. Diferentes versiones
+del algoritmo fueron descubiertas a lo largo de los años, pero la FFT no se hizo popular sino hasta 1965, con la
+publicación de James Cooley y John Tukey, quienes reinventaron el algoritmo al describir como ejecutarlo de
+forma eficiente en una computadora
+
+\subsubsection{Tranformada Rápida de Fourier}
+
+La transformada rápida de Fourier es un algoritmo para el cálculo de la transformada discreta de Fourier que reduce el tiempo de ejecución de un programa en gran medida.\\
+\\
+
+Conociendo el concepto y función de la transformada de Fourier Discreta pasamos a un terreno computacional, donde el cálculo de esta puede llegar a ser tardado y costoso para grandes instancias debido a su fórmula:\\
+\begin{center}
+    $x[k]=\sum_{n=0}^{N-1}x[n]r^{\frac{-j2\pi kn}{N}}$\\
+\end{center}
+Si queremos determinar la DTF de una señal $x[n]$ donde $N$ es el tamaño de términos a calcular, debemos multiplicar cada uno de sus valores por la constante \textbf{“e”} elevada a una función de \textbf{n}. Esto nos haría realizar \textbf{n} (multiplicaciones) multiplicado por\textbf{n} (adiciones), dándonos así una complejidad cuadrática $0n^{2}$. Computacionalmente hablando, con poca información no podría presentar un gran problema, sin embargo, sabemos que una complejidad cuadrática es problemática en los casos que se trabaja con grandes cantidades de información. \\
+
+Aquí entra la Transformara Rápida de Fourier, un algoritmo eficiente para calcular la DFT eliminando a todos aquellos procesos repetitivos que puede presentar, logrando un cálculo más rápido a menor costo. Su idea principal se basa en la descomposición iterativa en Transformadas de Fourier Discretas más simples. Cabe mencionar que la FFT asume como datos de entrada valores equivalentes a una potencia de 2, por lo tanto, para la fórmula anterior se asume que N es potencia de 2. 
+La FFT hace uso de dos teoremas importantes de la DFT:
+
+\begin{center}
+\begin{tabular}{ c c c }
+ \textit{Simetría Conjugada Compleja:} & $W_{N)}^{k(N-n}=W_{N)}^{-kn}=(W{_{N}}^{kn})^{*}$\\ 
+ \textit{Periodicidad en n,k:} & 
+      $W_{N}^{kn}=W_{N)}^{k(N+n)}=(W{_{N}}^{(k+N)n})$  
+\end{tabular}
+\end{center}
+Sin entrar en muchos detalles, gracias estas propiedades se es posible calcular la Transformada de Fourier Discreta por medio de su división, obteniendo la siguiente fórmula:\\
+\begin{center}
+    $X[k]=\sum_{r=0}^{N/2-1}x[2r](W_{N/2)})^{rk}+W_{N}^{K}\sum_{r=0}^{N/2-1}x[2r+1](W_{N/2)})^{rk}$
+\end{center}
+Con esta fórmula obtenemos la DFT a partir de pares de DFT con $\frac{n}{4}$ muestras hasta obtener transformadas de muestras singulares, cuyo cálculo es sencillo. Si inicialmente se tenían N muestras, ahora se podrán realizar $log_{2}N$ divisiones, así con el tamaño de entrada se tiene una complejidad de $O(Nlog_{2}N)$, complejidad logarítmica mucho mejor que la exponencial cuando se habla de grandes cantidades de información.
+Con estos datos, haciendo una pequeña comparación entre ambas versiones, podemos obtener la siguiente tabla: 
+\newpage
+
+\begin{figure}[h]
+\includegraphics[width=1\textwidth]{p4.png}
+\end{figure}
+
+Donde notamos que para pocos elementos la diferencia no es mucha, sin embargo la diferencia se ve reflejada en cantidades de información más grandes. Que, mirando de cerca, para una entrada equivalente a $2^{30}$, utilizando la DFT tardaría aproximadamente 13,343 días en calcular, sin embargo, con la FFT tomaría únicamente 32 segundos aproximadamente. \\
+
+Ahora, si la FFT es un algoritmo que optimiza el proceso de cálculo de la Transformada de Fourier Discreta, ¿Podemos optimizar aún más este proceso a través de la paralelización obteniendo menores tiempos? El siguiente análisis de este algoritmo nos dirá si su versión paralela es eficiente y recomendable a comparación de su versión secuencial. 
+\newpage
+\section{Descripción del algoritmo}
+\subsection{Algoritmo Cooley-Tukey FFT}
+El algoritmo más común para calcular la FFT es el algoritmo Cooley-Tukey. Este algoritmo reexpresa la transformda discreta de Fourier (DFT) como un arreglo de tamaño $N=N_{1}N_{2}$, en términos de $N_{1}$ DFTs más pequeñas de tamaño $N_{2}$, recursivamente. Esto reduce la complejidad del algoritmo a $O(N \log N)$ para un arreglo de tamaño $N$.
+Algunas características del algoritmo, grosso modo, son las siguientes:
+\begin{itemize}
+    \item \textbf{Entrada}: Un arreglo $X[N]$ de números complejos, donde $X[i]$, $i=0,1,2,...,N-1$ puede ser interpretado como el coeficiente de $x^{i}$ de un polinomio de  grado $N-1$. 
+    \item \textbf{Salida}: Otro arreglo $Y[N]$ de números complejos, resultado de aplicar la transformada rápida de Fourier a $X[N]$.
+    \item El objetivo del algoritmo es evaluar el polinomio representado por $X[N]$, en las raíces $N$-ésimas de la unidad.
+    \item Se utiliza recursividad, cuyo caso base es $N=1$.
+    \item Existen implementaciones donde $N$ es una potencia de algún número mayor que 2, pero tienden a ser mucho más complicadas. 
+\end{itemize}
+Considerando la entrada del algoritmo $X[N]$ como la representación de coeficientes de un polinomio de grado $N-1$, el algoritmo de la FFT se describe de la siguiente manera:
+\begin{enumerate}
+    \item $N$ es igual al tamaño del arreglo. Asumimos que $N$ es una potencia de 2. 
+    \item Se establece el caso base de la recursividad cuando $N=1$. Si se entra en este caso sucede lo siguiente:
+    \begin{itemize}
+        \item Este caso es equivalente a evaluar un polinomio de grado 0 (valor constante). Simplemente se regresa el arreglo con este valor.
+    \end{itemize}
+    \item Se define $\omega = e^{\frac{2\pi i}{N}}$.
+    \item Para la primera parte de los llamados recursivos, se dividen los índices pares de $X[N]$ tal que $X_{pares}=[x_{0}, x_{2}, x_{4},...,x_{N-2}]$.
+    \item De  la misma manera se dividen los índices impares de $X[N]$ tal que $X_{impares}=[x_{1},x_{3}, x_{5},...,x_{N-1}]$.
+    \item Se hacen dos llamadas recursivas a la FFT: una con $X_{pares}$, que devolverá el arreglo $Y_{pares}$; y otra con $X_{impares}$, que se asigna al arreglo $Y_{impares}$. Ahora los polinomios que llaman a la función son de grado $N/2$.
+    \item Se inicializa el arreglo $Y[N]$.
+    \item Para $j$ desde 0 hasta $N/2$:
+    \begin{itemize}
+        \item $Y[j] = Y_{pares}[j]+\omega^{j} Y_{impares}[j]$
+        \item $Y[j+n/2] = Y_{pares}[j]-\omega^{j} Y_{impares}[j]$
+    \end{itemize}
+     \item Regresar la lista $Y$
+\end{enumerate}
+\newpage
+\subsubsection{Pseudocódigo Cooley-Tukey}
+\begin{figure}[h]
+\includegraphics[width=1\textwidth]{FFT.png}
+\end{figure}
+\newpage
+\subsection{Versión iterativa de la FFT}
+En lugar de un algoritmo recursivo top-down, la FFT puede ser calculada de manera iterativa bottom-up. Sin embargo, la implementación iterativa no es tan sencilla (ni elegante) como la versión recursiva. En la implementación recursiva, los datos son divididos en dos arreglos: el primero contiene los índices pares y el segundo los índices impares, respectivamente. Si este procedimiento se vuelce a aplicar, se obtienen 4 subarreglos, y así sucesivamente. La siguiente figura ilustra el proceso de división de un arreglo de 8 elementos, efectuada 3 veces:
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{FFT2.png}
+\end{figure}\\
+Esto sugiere que podemos reordenar los datos de manera que la DFT se calcule como en la siguiente imagen, donde los elementos se combinan de la misma manera que en la imagen anterior. $F(2,0)$ es la DFT de $x_0,...,x_7$: 
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{FFT3.png}
+\end{figure}\\
+De esta manera, se pueden definir los siguientes pasos para la versión iterativa:
+\begin{enumerate}
+    \item Reordenar los índices del arreglo de entrada.
+    \item Calcular la DFT tomando los elementos en pares. Así, se tendría que el arreglo contiene $N/2$ DFTs de pares de elementos.
+    \item Tomar las $N/2$ DFTs en pares y calcular nuevamente su DFT. Así, se tendrían DFTs de arreglos de 4 elementos, cada una reemplazando una DFT de 2 elementos. Es decir, se tienen ahora $N/4$ DFTs de subarreglos de 4 elementos.
+    \item Se continua hasta que el vector tenga 2 DFTs de $N/2$ elementos, que se combinan para tener la DFT final de N elementos.
+\end{enumerate}
+
+\subsubsection{Pseudocódigo de la versión iterativa de la FFT}
+\begin{figure}[h]
+\centering
+\includegraphics[width=1\textwidth]{FFT4.png}
+\end{figure}
+\textbf{Nota:} Obsérvese que \textit{bit-reverse-copy} es una función que invierte los bits de la representación binaria de un número. Esto es útil para hacer el reordenamiento de los elementos del arreglo, donde cada número se empareja con su número con bits invertidos. 
+\subsection{Estructura paralela seleccionada}
+La implementación seleccionada para este algoritmo se ejecuta en varios procesadores, usando el lenguaje C y directivas del compilador (OpenMP) para acceder a las variables de memoria compartida. Más adelante se explicará por qué se implementa el paralelismo de datos, pero por ahora, podemos decir que el programa tiene una estructura paralela. 
+
+\newpage
+\section{Paralelización del algoritmo}
+Para paralelizar el algoritmo de la FFT, tenemos que considerar qué versión del algoritmo es más ideal. Existen dos razones principales para elegir la versión iterativa sobre la recursiva: primero, la versión iterativa puede funcionar realizando menos operaciones para calcular los índices; segundo, es más fácil de paralelizar la versión iterativa si se aprovechan las iteraciones de los bucles.\\ \\
+El algoritmo paralelo se desarrolla en dos etapas. Primero, se reordenan los elementos del arreglo de entrada (puede usarse inversión de bits). En la segunda etapa, se llevan a cabo $\log N$ fases, donde cada fase tiene $N/2$ mariposas (operaciones de multiplicación, suma y resta). Las operacines mariposa de cada fase son paralelizadas.\\ \\
+Dadas las condiciones del algoritmo, es observable que se puede paralelizar dividiendo las iteraciones de los ciclos for. En dichos ciclos es importante cuidar los recursos de uso compartido y las variables privadas. La siguiente imagen muestra el proceso para el algoritmo paralelo:
+\begin{figure}[h]
+\includegraphics[width=0.9\textwidth]{FFT6.png}
+\end{figure}
+
+\subsection{Tipo de paralelismo}
+Usando la versión iterativa del algoritmo, podemos identificar que se cumple con las siguientes características:
+\begin{enumerate}
+    \item El dominio del problema (un arreglo de números complejos) es subdividido y cada procesador se vuelve "propietario" de una porción del arreglo. Así, cada propietario realiza las instrucciones para sus propios elementos. 
+    \item Para subdividir el arreglo, se reparten las iteraciones del ciclo que lo recorre.
+    \item Algunas variables de las iteraciones son compartidas y otras son privadas. Es decir, se hace uso combinado de memoria compartida y memoria distribuida.
+    \item Después de cada fase, cada par de hilos se combina (join) para la siguiente fase hasta obtener el arreglo de salida. 
+\end{enumerate}
+Este tipo de paralelismo es conocido como paralelismo de datos o descomposición del dominio, lo que significa que varios hilos pueden trabajar con el mismo algoritmo o instrucciones que se repetirán, pero sobre diferentes datos y no hay dependencias con las demás iteraciones de cada fase. 
+
+
+\subsection{Métricas de desempeño}
+
+El fin de paralelizar un algoritmo es buscar una mejora a comparación de su versión secuencial, por ejemplo, que el tiempo de ejecución se vea disminuido ya que si es así significaría que el desempeño de nuestro algoritmo es eficiente a comparación de su versión secuencial. Buscando mirar este desempeño, existen métricas que nos permiten observar si es realmente conveniente paralelizar nuestro algoritmo o dejarlo en su versión serial, métricas que se verán a continuación.\\
+
+Tenemos cuatro métricas, las cuales son el tiempo de procesamiento y ejecución, speedup, eficiencia y fracción serial. De estas se mirarán a profundidad las tres últimas, dejando el tiempo de procesamiento y ejecución al apartado de las pruebas realizadas para realizar un mejor análisis.
+
+\subsubsection{SpeedUp}
+Brevemente, el SpeedUp nos ofrece la relación que existe entre el tiempo de ejecución de un programa sobre un procesador sobre el tiempo que toma en ejecutarse sobre n procesadores o hilos. Con la formula a continuación: 
+
+$$
+S(n)=\frac{T(1)}{T(n)}
+$$
+Al calcular esta métrica se pretende el caso ideal en que sea lineal, ya que de esta manera si se trabajan sobre n procesadores, se debería tener una mejora de factor n. Sin embargo, la realidad es que es habitual tener un SpeedUp sublineal (o menor al ideal), ya que no siempre se garantiza que al utilizar n procesadores se obtendrá una mejora de factor n, esto no es malo ya que la mayoría de los algoritmos paralelizables pertenecen a esta categoría. Cabe mencionar que puede haber casos donde el SpeedUp del algoritmo pueda superar al ideal.\\
+
+Para el momento en que se realiza este reporte ya se han realizado las pruebas sobre el tiempo de ejecución para una entrada de $2^{20}$ elementos sobre un equipo con un procesador de 4 núcleos y 8 hilos, obteniendo los siguientes valores de SpeedUp:
+
+\begin{center}
+\begin{tabular}{ c c c }
+\textit{N hilos} & SpeedUp\\
+ \textit{1} & 1\\ 
+ \textit{2} & 1.568\\ 
+\textit{4} & 2.172\\
+\textit{8} & 3.934
+\end{tabular}
+\end{center}
+
+Con estos resultados podemos obtener la siguiente gráfica:
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.6\textwidth]{Metricas.jpg}
+\end{figure}
+\\ \\
+Tras mirar la gráfica nos podemos dar cuenta que nuestro algoritmo para calcular la FFT en su versión paralela cuenta con un SpeedUp sublineal, lo cual es un factor favorable debido a que nos indica que hay una mejora en los tiempos de ejecución cuando se trabaja con más hilos a comparación de cuando se trabaja con solo uno.\\
+
+\subsubsection{Eficiencia}
+
+Esta métrica hace referencia a la proporción de recursos computacionales utilizados de manera simultánea, corresponde a un valor normalizado del SpeedUp (entre 0 y 1) y se asocia a la idea de que n procesadores deben realizar una fracción $\frac{1}{n}$ del tiempo que le lleva a un solo procesador. Mientras el valor se acerque más a uno nos indicará una situación ideal en el rendimiento y aprovechamiento.\\
+
+Para obtener el valor de la eficiencia según el número de procesadores se tiene la siguiente fórmula:
+
+$$
+E(n)=\frac{T(1)}{n \cdot T(n)}=\frac{S(n)}{n}
+$$
+
+Que relaciona al SpeedUp entre el número de procesadores. Con los valores obtenidos anteriormente, se llegó a los valores contenidos en la siguiente tabla:\\
+
+\begin{center}
+\begin{tabular}{ c c c }
+\textit{N hilos} & Eficiencia\\
+ \textit{1} & 1\\ 
+ \textit{2} & 0.784\\ 
+\textit{4} & 0.543\\
+\textit{8} & 0.491
+\end{tabular}
+\end{center}
+
+Comparando con el caso ideal, obtendríamos la siguiente gráfica:\\
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\textwidth]{Metricas2.jpg}
+\end{figure}
+\\ \\Podemos notar que conforme aumenta el número de hilos aumentará el reparto y uso de recursos entre cada uno de ellos de manera simultánea, haciendo que el valor de la eficiencia disminuya. Esto no indica una situación mala para nuestro algoritmo, ya que al final al paralelizar un algoritmo se dividirán los recursos entre el número de procesadores, núcleos o hilos con los que se trabaje, buscando aproximar lo mayor posible el valor de la eficiencia a uno. \\ \\
+\subsubsection{Fracción serial}
+
+Esta métrica depende de la cantidad de N operaciones, si N aumenta la fracción serial disminuye. Esta relaciona al SpeedUp y a la eficiencia con el fin de tomar en cuenta a otros factores, como el tiempo serial o en el cálculo de la fracción paralela que contribuye al escalamiento de un código paralelo. Su calculo se obtiene a partir de la siguiente fórmula:
+
+$$
+f=\frac{\frac{1}{S}-\frac{1}{n}}{{1}-{\frac{1}{n}}}
+$$
+A partir de ella se obtuvieron los siguientes resultados para cada número de hilos.\\
+
+\begin{center}
+\begin{tabular}{ c c c }
+\textit{N hilos} & Eficiencia\\
+ \textit{1} & 0\\ 
+ \textit{2} & 0.2755\\ 
+\textit{4} & 0.2805\\
+\textit{8} & 0..1476
+\end{tabular}
+\end{center}
+
+\subsection{Formas de comunicación}
+
+Sabemos que OpenMP implementa la metodología Fork-Join. Este patrón de diseño permite dividir el programa en ramas paralelas para volver a unirlas en algún punto subsecuente del programa y continuar con la ejecución serial. Algunas secciones paralelas pueden tener de igual manera ramas anidadas, de manera que se puedan alcanzar otros tipos de granularidad. \\ \\
+El reordenamiento del arreglo de entrada de la primera etapa permite acomodar los elementos de manera que en la segunda etapa cada fase sea libre de comunicación (al hacer las mariposas), y solo sería requerida al reunir los hilos.\\
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.55\textwidth]{FFT5.png}
+\end{figure}
+
+El programa utiliza algunas variables en memoria compartida y otras son de uso privado (directiva private). Es importante definir cuales de estas variables son de uso compartido y cuales no:
+
+\begin{itemize}
+    \item Variables de uso compartido:
+    \begin{enumerate}
+        \item Cantidad de elementos del arreglo.
+        \item Arreglo de números complejos de entrada.
+        \item Arrreglo de números complejos de salida.
+    \end{enumerate}
+    \item Variables privadas:
+    \begin{enumerate}
+        \item Variable de control del ciclo for (por defecto, OpenMP suele establecer esta variable como privada).
+        \item $\omega_{m}^{0}, \omega_{m}^{1}, ..., \omega_{m}^{m/2-1}$, donde $m=2^{s}$ y $s$ es una fase paralela.
+    \end{enumerate}
+\end{itemize}
+Los procesos comparten un espacio de memoria común y escriben y leen de manera asíncrona durante las fases de la segunda etapa (mariposas); por lo tanto, no es necesario especificar como se comunican los datos entre las tareas, puesto que cada hilo trabaja en su partición (y cada partición es independiente) y al final se unen de nuevo por pares (por esta razón, el número de hilos debe ser una potencia de 2) hasta unirse todos en el hilo principal del programa.
+\subsection{Granularidad}
+Para la segunda etapa de este programa, se tienen $\log N$ fases. Para cada fase $s$, desde 1 hasta $\log N$, hay $N/2^{s}$ conjuntos de mariposas con $2^{s-1}$ mariposas cada grupo. Para obtener una granularidad gruesa, cada hilo procesa subconjuntos de $N/P$ elementos, asumiendo que $P$ es una potencia de 2. En estas subrutinas, los procesadores hacen uso de referencias en memoria a recursos compartidos (los arreglos $X$ y $Y$); sin embargo, para modificar los valores a lo largo del arreglo, cada hilo tiene asignada una porción de iteraciones contiguas que va a realizar. \\
+
+Es decir, cada hilo tiene también asignada la porción de memoria compartida que modifica, y es encargado de calcular y escribir $N/P$ elementos. La comunicación sucede cuando se combinan los resultados de los pares de hilos para calcular la siguiente fase hasta llegar al arreglo final.
+\subsection{Balance de carga}
+En este programa, la directiva for de OpenMP indica al compilador distribuir las iteraciones de los ciclos entre los hilos que se manejen en cada region paralela. Por lo tanto, se trata de un tipo de balance carga estático, puesto que se asignan las instrucciones en tiempo de compilación.
+\newpage
+%-------------------------------------------------------------------------------------%
+\section{Implementación del algoritmo paralelo}
+
+Antes de comenzar con el análisis de la implementación del código se reconoce el gran trabajo por parte de Wesley Petersen y John Burkardt, encargados de implementar la Transformada Rápida de Fourier en el lenguaje de programación C y su derivada interfaz OpenMP para programación de multiprocesamiento.  
+Además, se proporciona el enlace con el cual se accedió al programa, el cual es el siguiente: $https://people.sc.fsu.edu/~jburkardt/c\_src/fft\_serial/fft\_serial.html.$\\
+
+Comenzando con la implementación, el programa se encarga de calcular la transformada de Fourier Discreta de un vector de datos complejos de manera más eficiente computacionalmente hablando, como se mencionó anteriormente, reduciendo cálculos repetitivos. Dicho en otras palabras, generará la transformada de un arreglo de n elementos. Sin entrar en mucho detalle ya que un análisis a profundidad del código podría derivar en otro trabajo de investigación completo, se resumirá en las partes importantes del código.
+El programa se encarga de generar arreglos de un tamaño n igual a un valor equivalente a una potencia de dos, ya que como se mencionó en los antecedentes, la FFT espera entradas de este tipo. \\
+
+Posteriormente de acuerdo al tamaño del arreglo generará números aleatorios entre 0 y 1 a los cuales se les generará un arreglo de senos y cosenos con los cuales se podrá aplicar la transformada. Teniendo estos elementos, el programa realizará la transformación al vector de datos aplicando los conceptos anteriormente donde la transformada se va dividiendo en la suma de otras transformadas más sencillas de resolver y así obtener la transformada final. Cabe mencionar que a lo largo de este proceso el programa va registrando el tiempo que tomo calcular por cada tamaño de arreglo.\\
+
+Del proceso anterior, en las funciones principales se colocan las directivas de OpenMP para poder hacer uso de sus funciones multiproceso de forma cautelosa para . De estas destacan las directivas para decidir que variables son compartidas y que variables serán privadas. Además de la directiva for que divide el número de iteraciones entre los hilos que se tengan; así como la directiva nowait que permite a los hilos terminar su bloque de instrucciones sin tener que esperar a otros.\\
+
+Lo anterior podemos verlo en la parte del código para asignar los valores aleatorios en el arreglo:
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{imp1.jpg}
+\end{figure}
+\vspace{5cm}
+En la parte para generar las tablas de senos y cosenos necesarias para el cálculo de la transformada:\\
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{imp2.jpg}
+\end{figure}
+
+Y por último en el proceso de la partición de la Transformada en varias transformadas de Fourier:\\
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{imp3.png}
+\end{figure}\\
+
+El programa realiza el cálculo de la transformada de Fourier de arreglos de tamaños equivalentes hasta $2^{20}$. Tras ejecutarlo el programa nos ofrece una salida en consola mostrando el tamaño del arreglo al que se le aplicó la transformada, el tiempo que tomó en calcular dicho arreglo y finalmente la cantidad de operaciones realizadas en la unidad de medida megaflops. La forma en que se logró esto fue por medio de funciones que contiene la librería $<omp.h>$ para obtener el tiempo de ejecución; en específico la función $omp\_get\_wtime()$\\ \\
+\\ \\
+\\ \\
+\\ \\
+\\ \\
+\\ \\
+La salida es la siguiente:
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{implem.jpg}
+\end{figure}
+
+Notamos que se muestra el tiempo en segundos que tomó aplicar la transformada rápida de Fourier en cada arreglo de tamaño N, así como los megaflops que requirió. Como podemos notar, todos los tamaños de los arreglos son valores equivalentes a potencias de dos.
+%----------------------------------------------------------------------------------------------------%
+\section{Pruebas realizadas}
+En este apartado se mostrará el resultado de diversas pruebas realizadas con el algoritmo en su forma secuencial, como en su forma paralela para diferentes tamaños de entrada, así como en diferentes equipos con diferentes procesadores. Además, se mirará la métrica de desempeño restante con la cual fue posible el cálculo de las demás: el tiempo de procesamiento y ejecución. 
+Las pruebas que se realizaron tuvieron el fin de ver cómo se modificaba el balance de carga entre hilo, la comparación del tiempo de ejecución entre versión serial y paralela y por último la comparación entre el número de operaciones entre ambas versiones.\\
+
+Las pruebas se dividieron en dos casos:\\
+
+Para el caso primero se realizaron pruebas con un procesador AMD Ryzen 5 de núcleos y 8 hilos. Para el segundo caso se realizaron las pruebas con un procesador Intel i7-8650u con 4 núcleos y 8 hilos.\\
+
+ La primera prueba consistió en ver cómo se ve afectado el tiempo de cálculo de la transformada para cada arreglo dependiendo la repartición de tareas entre el número de hilos. Mirando como se ve afectado el balance de carga.\\
+Tras recolectar la información se obtuvo las siguientes gráficas:
+\vspace{5cm}
+\begin{itemize}
+    \item Caso 1
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.5\textwidth]{caso1.jpg}
+        \end{figure}
+        \\ \\
+        \\ \\
+     
+    \item Caso 2
+        \begin{figure}[h]
+        \centering  
+        \includegraphics[width=0.5\textwidth]{caso2.jpg}
+\end{figure}
+\end{itemize}
+Podemos observar que conforme se utilizan más hilos, las tareas se reparten entre ellos, disminuyendo el tiempo de ejecución.\\
+
+La segunda prueba consiste en mirar el tiempo de ejecución de acuerdo al tamaño del arreglo al que se le aplicará la transformada. Tras obtener datos se obtuvo la siguiente gráfica, donde se compara la versión secuencial y paralela del algoritmo.\\
+\begin{itemize}
+    \item \textbf{Caso 1}
+    \begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{sec1.png}
+\end{figure}
+    \item \textbf{Caso 2}
+    \vspace{5cm}
+    \begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{sec2.png}
+\end{figure}
+\end{itemize}
+Analizando la gráfica podemos notar que como se mencionaba antes, en un inicio para cantidades no tan grandes de datos las versiones del algoritmo no presentan mucha diferencia, sin embargo, es en la cantidad grande de información donde se ve reflejada esta diferencia en el tiempo de ejecución. La versión paralela es eficiente para grandes cantidades de datos.\\
+
+Por último, tenemos la prueba donde se busca mirar el número de operaciones realizadas de acuerdo a la cantidad de elementos con los que se trabaja. Para el número de operaciones se utilizaron los megaflops, una unidad de rendimiento computacional que representa la cantidad de operaciones flotantes realizadas por segundos. \\
+\begin{itemize}
+    \item \textbf{Caso 1}
+    \begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{op1.png}
+\end{figure}
+    \item \textbf{Caso 2}
+    \begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{op2.png}
+\end{figure}
+\end{itemize}
+Para el primer caso podemos notar un buen aprovechamiento de los recursos debido a la cantidad de operaciones realizadas comparando ambas versiones; la versión secuencial requirió muchas más operaciones a comparación de su versión paralela. Por otro lado, tenemos una idea diferente en el segundo caso, ya que podemos notar que la versión paralela llega a realizar muchas más operaciones que la versión paralela. Esto puede deberse al balance de carga entre hilos.
+Estas pruebas nos permiten concluir que en efecto el balance de carga entre hilos va modificando de acuerdo a los que utilicemos, permitiendo una disminución en el tiempo de ejecución. Además, que la diferencia del tiempo de ejecución entre ambas versiones se ve mayormente reflejado cuando se trabaja con grandes cantidades de información; factor favorable debido a las múltiples implicaciones que tiene la Transformada de Fourier Discreta en sus diversas aplicaciones.
+
+\section{Aplicaciones del algoritmo}
+
+Como se analizó previamente, el objetivo del algoritmo de la transformada rápida de Fourier es evaluar el polinomio representado por $X[N]$ en las raíces N-ésimas de la unidad, demostrando la implementación de un vector de datos complejo, usando OpenMP para ejecución paralela.\\
+
+La digitalización de una señal, como el sonido, en donde se requieren una gran cantidad de muestreos como puede ser N>1000 puede convertirse en un proceso tedioso por lo gran cantidad de operaciones que se deben realizar, haciendo que haya más demora en el procesamiento. Cada punto en la imagen transformada requiere de $N^{2}$multiplicaciones complejas y N(N-1) sumas, por lo que la implementación de este algoritmo de la FFT es ideal para este problema.\\
+
+Actualmente, en todo proceso productivo se busca ser eficiente respeto a costes mínimos y aumento de volumen de la produccion para una mejor competitividad con productos de calidad. El mantenimiento de las maquinarias es sin duda para cumplir estaos objetivos, entre ellos, las vibraciones mecánicas es una de las herramientas más importantes que tiene el mantenimiento para conocer el estado en el que se encuentran los equipos.\\
+
+Medir las vibraciones de la maquinaria ayuda a monitorear las condiciones del 
+equipo. La representación frecuencial captura las características espectrales de una vibración. Además de la
+frecuencia fundamental existen muchas frecuencias presentes en una forma de onda. Las componentes de
+frecuencias armónicas son enteros simples de la frecuencia fundamental, aunque no en todos los casos hay
+una fundamental clara.\\
+
+Nuevamente tenemos un problema en donde nos ocupa realizar estos muestreos frecuenciales sin que se vuelva una tarea aburrida que conlleve mucho tiempo, y es por esto que, nuevamente, el algoritmo de la tranformada rapida de Fourier es excelente para resolver este problema.\\
+
+La importancia del algoritmo radica en el hecho de que elimina una gran parte delos cálculos repetitivos a los que se ve sometida la TFD, por lo que se logra un cálculo más rápido a menor costo.\\
+
+Otros ejemplos de la aplicación del algoritmo de la FFT son el diseño de circuitos, espectroscopia, cristalografía, procesamiento de señales y comunicaciones, imágenes, etc.\\
+
+Es extremadamente útil al reducir el número de cálculos a partir de algo del orden $n^{2}$ a $n~log~n$  lo que obviamente ofrece una enorme reducción en el tiempo de cálculo.\\
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=.5\textwidth]{p5.png}
+\end{figure} 
+
+\newpage
+
+\section{Conclusiones}
+
+En conjunto con todos los conceptos vistos hasta este momento en el presente documento, recalcamos la importancia de saber identificar cuando un algoritmo en su versión secuencial puede ser paralelizado, ya que no todos pueden serlo y verificar si este proceso es de ayuda o no respecto al tiempo de ejecución del algoritmo en su versión secuencial.\\ 
+
+En nuestro caso, el algoritmo implementando nos permitió conocer un nuevo objeto de estudio: Las transformadas de Fourier. Conocer y comprender la teoría detrás del algoritmo nos fue de mucha relevancia, ya que pudimos ser capaces de relacionar conceptos y metodologías con temas vistos de las materias pertenecientes a la División de Ciencias básicas para una mejor comprensión de este tema, además, conocer las aplicaciones que estas transformaciones tienen y cómo es que hasta nuestros días siguen siendo de mucha utilidad y más aplicadas en nuestro campo, nos lleva a diversas ideas de como podríamos hacer uso del paralelismo con estas transformaciones para lograr mayor eficiencia en las aplicaciones y programas que contienen este algoritmo para poder resolver las problemáticas computacionales que se requieran. \\
+
+Encontramos que existen dos maneras principales de implementar el algoritmo FFT: la versión recursiva y la versión iterativa. Dada la naturaleza de la versión iterativa, se determinó que la paralelización se podría lograr más fácil y eficientemente en esta versión si se aprovechaban las iteraciones para la paralelización. Se observó que reordenando los elementos de la entrada del algoritmo, se pueden hacer las operaciones mariposa de cada fase de forma paralela, combinando los resultados de los hilos en pares hasta llegar al arreglo final. \\ 
+
+Se analizó y se determinaron los siguientes aspectos para la versión paralela:
+\begin{itemize}
+    \item La implementación fue realizada en lenguaje C con directivas de OpenMP para el compilador.
+    \item El tipo de paralelismo que se aplica es paralelismo de datos.
+    \item Si se reordenan los elementos del arreglo de entrada, se pueden hacer las operaciones mariposa de cada fase de manera paralela e independiente; sin embargo, debe existir la comunicación al final de cada fase y reunir los pares de hilos.
+    \item Las métricas de desempeño nos indican que efectivamente existe una mejoría notable en la versión paralela del algoritmo a comparación de su versión secuencial.
+    \item Se usa memoria compartida, pero tambien se utilizan directivas para crear variables privadas.
+    \item La granularidad puede ser gruesa si cada procesador toma $N/P$ elementos para hacer las operaciones de mariposa, y al final se fusionan por pares después de cada fase para obtener el arreglo final de salida.
+    \item El balance de carga es estático porque se distribuyen las operaciones en tiempo de compilación.
+    \item Tras realizar pruebas con ambas versiones del algoritmo, se confirma que su versión paralela presenta gran mejoría en los tiempos de ejecución para grandes cantidades de información. 
+\end{itemize}
+
+Vistas algunas de las aplicaciones del algoritmo FFT, podemos decir que es de suma importancia en nuestros días haciendo que en nuestro campo, la computación, el tiempo se vea reducido en gran medida dada la correcta implementación del algoritmo. \\ \\
+
+En conclusión podemos decir que la hipótesis formulada en un inicio se confirma, dado que los tiempos de ejecución para la FFT en su versión paralela se vieron disminuidos a comparación de su versión secuencial, convirtiendo a este algoritmo paralelo en algún tipo de optimización de la optimización. Por lo tanto podemos concluir que la versión paralela de la FFT es recomendable y eficiente para casos en los que se trabaje con grandes cantidades de información. 
+\newpage
+\section{Autoevaluación general del equipo}
+Siendo este el segundo proyecto realizado por el equipo 8; conformado por Barrios Aguilar Dulce Michelle, Chong Herández Samuel y Mendoza Hernández Carlos Emiliano, consideramos que se presentó un desempeño regular para la forma de trabajo del presente proyecto a comparación del primer proyecto. Intuimos que esto se debió a que se presentaron algunas dificultades en la repartición del trabajo y en la forma de organización de este, así como los tiempos de trabajo para la creación del mismo. \\ \\
+Un factor que nos provocó retrasos en la elaboración de este proyecto fue el tiempo invertido por cada uno de nosotros para investigar, leer y comprender la teoría matemática necesaria, la cual pensamos que fue difícil de comprender y requirió de un buen tiempo de lectura y análisis, además de diversos materiales y recursos visuales. Por otra parte, consideramos que fue un reto condensar un concepto matemático tan poderoso y abstracto (además de avanzado) en una presentación breve que cubra todos los aspectos relevantes. \\ \\
+A pesar de esto, la forma en que se trabajó sobre presión resultó satisfactoria, cumpliendo con los requisitos requeridos para cumplir con el trabajo de investigación. \\ \\
+Como equipo tomamos esto como un aprendizaje que nos permite tener experiencia para futuros trabajos, teniendo como punto de partida la organización de prioridades no solo escolares sino en otros ámbitos para poder cumplir con cada una de ellas. 
+
+\newpage
+\section{Referencias}
+
+\begin{enumerate}
+    \item Complejidad algorítmica. Departamento de Informática Universidad de Valladolid Campus de Segovia. Obtenido desde https://www2.infor.uva.es/~jvalvarez/docencia/tema5.pdf
+    \item Martínez A, N. (2017). Transformada rápida de Fourier
+Implementación y algunas aplicaciones[Tesis de fin de grado]. UNIVERSIDAD DE MURCIA. Facultad De Matemáticas.
+\item Supervielle F. (Septiembre 2011). Digitalización del sonido. Universidad Nacional del Sur. Obtenido desde http://lcr.uns.edu.ar/fvc/NotasDeAplicacion/FVC-Gaston+Supervielle.pdf
+\item Corral C. (Septiembre 2012). Vibraciones mecánicas. Universidad Nacional del Sur. Obtenido desde http://lcr.uns.edu.ar/fvc/NotasDeAplicacion/FVC-Carolina%20A.%20Corral.pdf
+\item Vista de Transformada Rápida de Fourier. (s. f.). Obtenido desde \\ https://camjol.info/index.php/fisica/article/view/8276/8495.
+\item Heath M.(s.f). Parallel Numerical Algorithms Chapter 13 – Fast Fourier Transform. Department of Computer Science
+University of Illinois at Urbana-Champaign. Obtenido desde $https://courses.engr.illinois.edu/cs554/fa2015/notes/13_fft_8up.pdf$
+    \item Sonzogni , V. Eficiencia de programas paralelos. Santa Fe Argentina: CIMEC. Obtenido de http://venus.santafe-conicet.gov.ar/cursos/moodledata/17/Transpeficiencia.pdf
+    \item Tinetti, F. Paralelización y Speedup Superlineal en Supercomputadoras Ejemplo con Multiplicación de Matrices. CORE. Retrieved from https://core.ac.uk/download/pdf/301043737.pdf
+    \item Speedup Ratio and Parallel Efficiency.TechWeb. Boston University.
+    (n.f.). Obtenido desde\\
+    https://www.bu.edu/tech/support/training-consulting/online-tutorials/matlab-pct/scalability/
+    \item Maklin, C. (2021, December 13). Fast Fourier Transform - Towards Data Science. Medium. https://towardsdatascience.com/fast-fourier-transform-937926e591cb
+    \item Prof. Edgar Tista. (2020, May 7). Introducción a la programación paralela p2 [Video]. YouTube. https://www.youtube.com/watch?v=vlM26S0XHFs
+    \item Schmidt, A. (2013). FFT: Transformada Rápida de Fourier. Universidad Nacional del Sur, Avda. Alem 1253, B8000CPB Bahía Blanca, Argentina. Obtenido de \\
+    http://lcr.uns.edu.ar/fvc/NotasDeAplicacion/FVCSchmidt-Schmidt%20Ana%20Lucía.pdf
+    \item  Bernardo J. [3Blue1Brown] (2020). ¿Qué es la tranformada rápida de Fourier? Una introducción visual[Video]. Youtube. https://www.youtube.com/watch?v=h4PTucW3Rm0
+    \item Brian Douglas. (2013, January 11). Introduction to the Fourier Transform (Part 1) [Video]. YouTube. https://www.youtube.com/watch?v=1JnayXHhjlg
+    \item Reducible. (2020, November 14). The Fast Fourier Transform (FFT): Most Ingenious Algorithm Ever? [Video]. YouTube. https://www.youtube.com/watch?v=h7apO7q16V0kmara lo pusimos doble
+    \item Worner S. (s.f). Fast Fourier Transform. Swiss Federal Institute of Technology Zurich. Obtenido desde http://pages.di.unipi.it/gemignani/woerner.pdf
+    \item 3Blue1Brown Español. (2020, September 21). ¿Qué es la Transformada de Fourier? Una introducción visual [Video]. YouTube. https://www.youtube.com/watch?v=h4PTucW3Rm0
+    \item Camacho A.(2013, Noviembre 5). Transformada Discreta de Fourier[Video].Youtube. \\ https://www.youtube.com/watch?v=ysjbvYvHZOY
+    \item (s.f) Parallel Fast Fourier Transform. Studies in Parallel and Distributed System. Obtenido de \\
+    
+https://cs.wmich.edu/gupta/teaching/cs5260/5260Sp15web/studentProjects/tiba\&hussein.pdf
+\end{enumerate}
+
+\end{document}
+

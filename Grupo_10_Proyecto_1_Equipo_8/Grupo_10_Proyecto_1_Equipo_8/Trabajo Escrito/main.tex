@@ -1,0 +1,690 @@
+\documentclass{article}
+\setlength{\parindent}{0pt}
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[spanish]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with`a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+%=========================================================================================================================================
+\begin{document}
+
+\thispagestyle{empty}
+\begin{titlepage}
+\centering
+\begin{center}
+\begin{tabular}{c c}
+\includegraphics[width=0.25\textwidth]{fif.jpg}\hspace{5cm}&\hspace{6cm}\includegraphics[width=0.25\textwidth]{gg.png}\\
+\end{tabular}
+\end{center}
+
+{\bfseries\LARGE Universidad Nacional Autónoma de México \par}
+\vspace{1cm}
+{\scshape\Large Facultad de Ingeniería \par}
+{\scshape\Large Estructura De Datos y Algoritmos II \par}
+\vspace{2cm}
+{\scshape\Large Proyecto 1: \par}
+{\scshape\Large Árboles Binarios \par}
+\vfill
+{\scshape\Large Profesor: \par}
+{\Large Edgar Tista García \par}
+\vfill
+{\scshape\Large Equipo: 8 \par}
+\vfill
+{\scshape\Large Integrantes: \par}
+{\Large Barrios Aguilar Dulce Michelle \par}
+{\Large Chong Hernández Samuel \par}
+{\Large Mendoza Hernández Carlos Emiliano \par}
+\vfill
+{\Large Semestre 2023-1\par}
+\vfill
+{\Large 4 de diciembre de 2022 \par}
+\end{titlepage}
+%=======================================================================================
+\newpage
+\section{Objetivo}
+Que el alumno implemente aplicaciones relacionadas con los árboles binarios y que desarrolle sus habilidades de trabajo en equipo y programación orientada a objetos.\\
+\section{Introducción}
+En las estructuras de datos lineales como las pilas o las colas, los datos se estructuran en  forma secuencial es decir  cada  elemento  puede  ir  enlazado  al  siguiente  o  al  anterior.  En  las  estructuras  de  datos  no  lineales  o estructuras multi‐enlazadas se pueden presentar relaciones más complejas entre los elementos; cada elemento puede ir enlazado a cualquier otro, es decir. puede tener varios sucesores y/o varios predecesores.\\
+
+Ejemplos de estructuras de datos no lineales son los árboles.\\
+
+Un árbol es una colección de elementos llamados nodos, uno de los cuales se distingue como raíz, junto con una relación(rama)  que  impone  una  estructura  jerárquica  entre  los  nodos.  Los  árboles  genealógicos  y  los organigramas son ejemplos de árboles.\\
+
+Un árbol puede definirse formalmente de forma recursiva como:
+\begin{enumerate}
+    \item Un solo nodo es, por sí mismo un árbol. Ese nodo es también la raíz de dicho árbol.
+    \item Suponer que $n$ es un nodo y que $A_{1}, A_{2},...,A_{k}$ son árboles con raíces $n_{1}, n_{2},...,n_{k}$ respectivamente. Se puede construir un nuevo árbol haciendo que $n$ se constituya en el padre de los nodos $n_{1}, n_{2},...,n_{k}$. En dicho árbol, $n$ es la raíz y $A_{1}, A_{2},...,A_{k}$ son subárboles de la raíz. Los nodos $n_{1}, n_{2},...,n_{k}$ reciben el nombre de hijos del nodo $n$.
+\end{enumerate}
+
+La definición implica que cada nodo del árbol es raíz de algún subárbol contenido en el árbol principal.
+
+\subsection{Árboles binarios}
+Un árbol binario es un árbol de grado dos, esto es, cada nodo puede tener dos, uno o ningún hijo. \\
+
+En los árboles binarios se distingue entre el subárbol izquierdo y el subárbol derecho de cada nodo. De forma que, por ejemplo, los dos siguientes árboles, a pesar de contener la misma información son distintos por la posición de los subárboles:
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.4\textwidth]{0.png}
+\end{figure}
+
+Se puede definir al árbol binario como un conjunto finito de nodos $m$ nodos $(m \geq 0)$, tal que:
+\begin{enumerate}
+    \item Si $m=0$, el árbol está vacío.
+    \item Si $m>0$
+    \begin{enumerate}
+        \item Existe un nodo raíz.
+        \item El resto de los nodos se reparte en dos árboles binarios que se conocen como subárbol izquierdo y subárbol derecho de la raíz.
+    \end{enumerate}
+\end{enumerate}
+
+\subsection{Aplicaciones de los árboles binarios}
+Una aplicación es la representación de otro tipo de árboles. Esto es importante porque resulta más complejo manipular nodos de grado variable (número variable de relaciones) que nodos de grado fijo. Entonces es posible establecer una relación de equivalencia entre cualquier árbol no binario y un árbol binario, es decir, obtener un árbol binario equivalente.\\
+
+Otra aplicación de los árboles binarios es hallar soluciones a problemas cuyas estructuras son binarias, por ejemplo, las expresiones aritméticas y lógicas.\\
+
+En este proyecto se profundizará en más aplicaciones de los árboles binarios en sus formas de heap, árbol binario de búsqueda balanceado y árbol de expresiones aritméticas.
+\newpage
+\section{Desarrollo}
+\subsection{Árbol AVL}
+Los árboles AVL surgen con el objetivo de mantener la eficiencia en la operación de búsqueda en árboles binarios de búsqueda. La principal característica de éstos es la de realizar re-acomodos o balanceos, después de re-inserciones o eliminaciones de elementos.\\
+
+Formalmente, se define un árbol balanceado (o AVL) como un árbol binario de búsqueda, en el cual se debe cumplir con la siguiente condición: Para todo nodo T del árbol, la altura de los subárboles izquierdo y derecho no deben diferir en más de una unidad.\\
+\begin{align*}
+|H_{R_I} - H_{R_D}|\leq1\\
+\end{align*}
+
+Donde $H_{R_I}$ es la altura de la rama o subárbol izquierdo y $H_{R_D}$ es la altura de la rama o subárbol derecho.\\
+
+\textbf{Inserción}\\
+
+Al insertar un elemento de un árbol balanceado se deben distinguir los siguientes casos:
+
+\begin{enumerate}
+\item Las ramas izquierda (RI) y derecha (RD) del árbol tienen la misma altura ($H_{R_I}$ = $H_{R_D}$), por lo tanto:\\
+
+            1.1 Si se inserta un elemento en RI, entonces $H_{R_I}$ será mayor en una unidad a $H_{R_D}$ \\
+            1.2 Si se inserta un elemento en RD, entonces $H_{R_D}$ será mayor en una unidad a $H_{R_I}$\\
+            
+\item Las ramas izquierda (RI) y derecha del árbol tienen altura diferente ($H_{R_I} \neq H_{R_D}$) : \\  
+
+            2.1 Si $H_{R_I} < H_{R_D}$:\\
+            
+\hspace{1cm} 2.1.1 Si se inserta un elemento en RI, entonces $H_{R_I}$ será igual a $H_{R_D}$
+
+\hspace{1cm} 2.1.2 Si se inserta un elemento en RD, entonces se rompe el criterio de 
+equilibrio del árbol 
+
+\hspace{1.8cm} y es necesario estructurarlo.\\
+
+            2.2 Si $H_{R_I} > H_{R_D}$:\\
+            
+\hspace{1cm} 2.2.1 Si se inserta un elemento en RI, entonces se rompe el criterio de equilibrio del árbol 
+
+\hspace{1.8cm} y es necesario estructurarlo.
+
+\hspace{1cm} 2.2.2 Si se inserta un elemento en RD, entonces $H_{R_D}$ será igual a $H_{R_I}$
+\end{enumerate}
+
+\textbf{Factor de equilibrio}\\
+
+Para determinar si un árbol está balanceado o no, se debe manejar información relativa al equilibrio de cada nodo del árbol. Surge así el concepto del factor de equilibrio de un nodo (FE) que se define como la altura del subárbol derecho menos la altura del subárbol izquierdo.
+\begin{align*}
+FE = H_{R_I} - H_{R_D}\\
+\end{align*}
+\newpage
+\textbf{Reestructuración del árbol balanceado}\\
+\begin{enumerate}
+\item Seguir el camino de búsqueda del árbol, hasta localizar el lugar donde hay que insertar el elemento.
+\item Calcular su FE, que será 0 en este estado.
+\item Regresar por el camino de búsqueda calculando el FE de los distintos nodos visitados.
+\item Si en alguno de los nodos se viola el criterio de equilibrio, entonces se debe reestructurar el árbol.
+\item El proceso termina al llegar a la raíz, o cuando se realiza la reestructuración, en cuyo caso no es necesario determinar el FE de los nodos restantes.
+\end{enumerate}
+
+Reestructurar el árbol significa rotar nodos de este para llevarlo a un estado de equilibrio. La rotación puede ser simple o compuesta. El primer caso involucra dos nodos y el segundo caso afecta a tres. Si la rotación es simple se puede realizar por las ramas derechas o por las ramas izquierdas. Si por otra parte la rotación es compuesta se puede realizar por las ramas derecha e izquierda o por las ramas izquierda y derecha.\\
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.5\textwidth]{1.png}
+\end{figure}
+
+\textbf{Rotación simple a la izquierda}\\
+
+FE = -2 y  FE del hijo izquierdo = -1
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.2\textwidth]{2.png}
+\end{figure}
+\newpage
+\textbf{Rotación simple a la derecha}\\
+
+FE = 2 y  FE del hijo derecho = 1
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.2\textwidth]{3.png}
+\end{figure}
+
+\textbf{Rotación doble  a la izquierda}\\
+
+FE = -2 y  FE del hijo derecho = 1
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.2\textwidth]{4.png}
+\end{figure}
+\newpage
+\textbf{Rotación doble a la derecha}\\
+
+FE = 2 y  FE del hijo izquierdo = -1
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.2\textwidth]{5.png}
+\end{figure}
+
+\textbf{Eliminación}\\
+
+Esta operación consiste en quitar un nodo del árbol sin violar el principio de equilibrio del árbol AVL.
+Para la eliminación se tienen los siguientes casos:
+\begin{enumerate}
+\item Si el elemento a eliminar es una hoja, se elimina.
+\item Si el elemento a eliminar tiene un solo hijo, entonces se tiene que sustituir por ese hijo.
+\item Si el elemento a eliminar tiene los dos hijos, entonces se tiene que sustituir por el predecesor.
+\end{enumerate}
+
+Lo primero que se debe hacer es localizar la posición del nodo a eliminar en el árbol. Se elimina siguiendo los criterios establecidos anteriormente y se regresa por el camino de búsqueda calculando el FE de los nodos visitados. Si en alguno de los nodos se viola el criterio de equilibrio, entonces se debe reestructurar el árbol. El proceso termina cuando se llega a la raíz del árbol. En este proceso se puede llevar a cabo más de una rotación en el camino hacia atrás.
+Las reestructuraciones y sus casos son similares a la operación de inserción.\\
+
+\textbf{Búsqueda}\\
+La búsqueda en un árbol AVL es exactamente igual que para un árbol binario de búsqueda.
+\newpage
+\subsection{Heap}
+
+Un heap es un árbol binario completo en donde cada nodo tiene como máximo 2 hijos (0, 1, ó 2 hijos) donde para cada nodo que se pueda revisar, el valor del padre es mayor o menor según sus propiedades.\\
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.6\textwidth]{7.png}
+\end{figure}
+
+Otra manera de llamar a los heaps es por su traducción al español como “Monticulo”, sin embargo, dentro de las estructuras de datos es mejor conocido como heap.\\
+
+Un montículo cumple con las siguientes propiedades:
+\begin{itemize}
+\item Árbol binario completo (aquel en donde en todos los niveles, excepto el ultimo están completamente íntegros.
+\item En el último nivel, las claves están lo más a la izquierda posible
+\item Puede ser fácilmente representado como una matriz
+\end{itemize}
+
+Una manera didáctica de entender el funcionamiento del algoritmo es mediante el entendimiento de cada nodo que conforma el árbol como un arreglo: \\
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.6\textwidth]{9.png}
+\end{figure}
+
+Donde, para cada nodo, existe un arreglo dada su posición dentro del árbol completo, comenzando su recorrido desde el nodo padre (o raíz), donde el primer nodo hijo que se encuentre lo más a la izquierda posible ocupará el siguiente lugar en el arreglo, siguiendo su recorrido hacia el nodo hijo derecho, esto de manera recursiva para los demás niveles del árbol. 
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.6\textwidth]{8.png}
+\end{figure}
+
+Según el valor del padre o raíz, obtenemos la siguiente clasificación:
+
+\begin{itemize}
+\item MAX HEAP
+
+Para cada valor del nodo, el valor del padre es mayor.\\
+Si algún nodo se almacena en la posición “i”, entonces su hijo izquierdo se almacena en 2i +1 y el hijo derecho en 2i + 2, en donde obtenemos el siguiente análisis: 
+\begin{itemize}
+\item $A [(i-1) / 2]$ representa el nodo padre de A [i].
+\item A [(2i +1)] representa el nodo hijo izquierdo de A [i].
+\item A [2i + 2] devuelve el nodo hijo derecho de A [i].
+\end{itemize}
+\item MIN HEAP
+Para cada valor del nodo, el valor del padre es menor.\\
+Si un nodo se almacena en la posición 'i', entonces su nodo hijo izquierdo se almacena en la posición 2i + 1 y luego el nodo hijo derecho está en la posición 2i + 2. 
+La posición (i-1) / 2 devuelve su nodo padre.\\
+\end{itemize}
+Los árboles, incluyendo a los heaps, son estructuras de datos no lineales en donde podemos implementar las siguientes operaciones:
+\begin{itemize}
+\item Inserción
+\item Eliminación
+\item Búsqueda
+\end{itemize}
+\textbf{Construcción de un heap}\\
+
+La \textit{inserción} de claves para la construcción de un heap sigue los siguientes pasos:
+\begin{itemize}
+\item Insertar el nuevo elemento en la primera posición disponible lo más abajo y a la izquierda posible
+\item Verificar si el valor agregado es mayor que el nodo padre, en tal caso, intercambiar los elementos, en caso contrario finaliza la inserción.
+\item Repetir de manera recursiva, volviendo a verificar en la nueva posición. 
+\end{itemize}
+
+En la etapa de construcción de un heap se hacen comparaciones/ intercambios con una parte de los elementos de la colección, es decir con un solo subárbol (derecho o izquierdo). \\
+
+Para la \textit{eliminación} de una clave se realiza lo siguiente: 
+\begin{itemize}
+\item Se reemplaza la raíz con ele elemento que ocupa la última posición del heap lo más abajo y a la derecha posible
+\item Verificamos si el valor de la nueva raíz es menor que el valor mas grande entre sus hijos, (si esto ocurre se realiza el intercambio, en caso contario finaliza la ejecución.
+\item Este proceso se repite recursivamente. 
+\end{itemize}
+
+Es importante mencionar que el proceso de eliminación concluye cuando se verifica que el resto de la estructura conserve la integridad de un heap. 
+\newpage
+\subsection{Árbol de expresiones aritmeticas}
+ 
+Los árboles de expresiones aritméticas son árboles binarios encargados de almacenar una expresión matemática, en el que la raíz y cada nodo perteneciente a la raíz del subárbol izquierdo como el subárbol derecho contienen a los operadores de dicha operación; mientras que los nodos hoja contienen a los operandos de la expresión.
+Antes de pasar a la forma de construcción de un árbol de expresión aritmética, se explicará un concepto fundamental: \textbf{Recorrido de árboles.}\\
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.4\textwidth]{6.png}
+\end{figure}
+
+Se denomina recorrido de un árbol al proceso que permite visitar todos los nodos del mismo por lo menos una vez.\\
+
+Existen tres tipos de recorrido para un árbol:\\
+\begin{enumerate}
+\item Recorrido preOrden. (Notación polaca)
+\begin{enumerate}
+\item Visitar nodo.
+\item Recorrer subárbol izquierdo.
+\item Recorrer subárbol derecho.
+\end{enumerate}
+\item Recorrido inOrder.
+\begin{enumerate}
+\item Recorrer subárbol izquierdo.
+\item Visitar nodo.
+\item Recorrer subárbol derecho.
+\end{enumerate}
+\item Recorrido postOrden. (Notación polaca inversa)
+\begin{enumerate}
+\item Recorrer subárbol izquierdo.
+\item Recorrer subárbol derecho.
+\item Visitar nodo.
+\end{enumerate}
+\end{enumerate}
+Este es el algoritmo para realizar por cada tipo de recorrido, el cual se basa en la recursividad.
+La importancia de conocer estos recorridos es que es a través de ellos podemos construir nuestro árbol y resolver la expresión obtenida.
+Para construir un árbol binario a partir de una expresión aritmética es importante tomar en cuenta que la expresión a partir de la cual se construirá el árbol se encontrará en su notación infija (inOrder), además de que esta estará contenida en paréntesis con operaciones internas igualmente limitadas por paréntesis.\\
+
+
+\textbf{Construcción del árbol de expresión}\\
+
+Dicho lo anterior, se debe seguir el siguiente algoritmo para la construcción de un árbol de expresión aritmética:\\
+
+Se recorrerá la expresión introducida analizando carácter por carácter. Matemáticamente los operadores mantienen una jerarquía que les da prioridad sobre otros operadores, esta regla se mantendrá en la construcción del árbol para obtener el resultado correcto de la expresión introducida. Se utilizarán dos pilas, una para ir almacenando a los nodos operadores y otra para almacenar los subárboles de operaciones que se vayan formando a lo largo de la construcción del árbol. Si el carácter no corresponde a un operador (operando), se apilará en la pila de los subárboles hasta la aparición de uno; si corresponde a un operador se apilará en la pila de operadores, se le asignarán sus hijos izquierdo y derecho los cuales serán los operandos a operar, y posteriormente se apilará en la pila de expresiones como subárbol. Se deben ir ignorando los paréntesis en la formación del árbol, y el último elemento en la pila de subárboles que se desencola es el árbol resultante.\\
+
+\textbf{Resolución de la expresión}\\
+
+El propósito de crear este árbol es poder llegar a la resolución de la expresión introducida. Para lograrlo debemos obtener la notación postfija de la expresión, o sea, realizar el recorrido postOrden del árbol creado. El fin de obtener esta notación es aplicar el algoritmo de la notación polaca inversa que nos permitirá obtener el resultado de la expresión. \\
+
+Dada la peculiar sintaxis de la notación postfija de la expresión en la cual primeramente vienen los operandos y posteriormente los operadores, el algoritmo de notación polaca inversa es similar al de la construcción del árbol. Para este se leerá la expresión en su notación postfija, se utilizará una pila en la que se irán almacenando los resultados de cada operación de acuerdo a la prioridad de los operadores. Este resultado se irá acumulando, hasta que de igual manera el último elemento en desencolar sea el resultado final.
+
+\newpage
+\section{Implementación}
+
+\subsection{Árboles AVL}
+\vspace{5mm} %5mm vertical space
+\textbf{Clase NodoAVL}\\
+
+Esta clase tiene cuatro atributos, un método constructor y sus setters y getters.\\
+
+\textit{\textbf{Atributos}}
+
+\begin{itemize}
+\item int valor: Contiene el valor o clave del nodo.
+\item NodoAVL izq: Referencia al hijo izquierdo del nodo.
+\item NodoAVL der: Referencia al hijo derecho del nodo.
+\item int h: Contiene la altura del subárbol que se forma tomando este nodo como raíz. Este atributo sirve para facilitar el cálculo del factor de equilibrio de un nodo. Si se consulta este atributo tanto del hijo izquierdo como del hijo derecho de este nodo, simplemente se hace la resta para obtener el factor de equilibrio.
+\end{itemize}
+
+\textit{\textbf{Constructor}}\\
+
+NodoAVL (int valor): Inicializa un nodo con el valor especificado. La altura siempre se inicializa con 1 porque cada nuevo nodo se inserta como hoja, cuya altura es 1 al momento de la inserción.\\
+
+
+\textbf{Clase ArbolAVL}\\
+
+Esta clase tiene un atributo, dos constructores, 10 métodos internos (privados) y 4 métodos públicos.\\
+
+\textit{\textbf{Atributo}}\\
+
+NodoAVL root: Referencia al nodo raíz del árbol.\\
+
+\textit{\textbf{Constructores}}
+\begin{itemize}
+\item ArbolAVL(): Inicializa un árbol vacío.
+\item ArbolAVL(int valor): Inicializa un árbol cuya raíz contiene el valor especificado.
+\end{itemize}
+\textit{\textbf{Métodos}}
+\begin{itemize}
+\item public void vaciar(): Elimina la referencia de la raíz, perdiendo así las referencias de todos los nodos. Se utiliza para eliminar el árbol actual y permitir la creación de uno nuevo
+\item public void breadthFirst(): Realiza el recorrido BFS del árbol. Imprime cada nodo conforme se visita en el recorrido. Esta función es utilizada como manera de imprimir el árbol. Se apoya de la función privada visit.
+\item private void visit(NodoAVL n): Imprime el valor del nodo que recibe como parámetro. Este método interno se utiliza como manera de visitar un nodo en el recorrido BFS.
+\item public void buscar(int clave): Realiza la búsqueda de la clave especificada. Imprime un mensaje indicando si la clave buscada está o no está en el árbol. Este método funciona como una máscara del método recursivo privado buscarUtil.
+\item private buscarUtil (NodoAVL actual, int clave): Este método hace un recorrido recursivo del árbol, iniciando por la raíz. Funciona de la misma manera que la búsqueda para un árbol binario de búsqueda.
+\item public void insertar(int valor): Realiza la inserción de un nodo con el valor especificado, manteniendo las condiciones de equilibrio. Este método funciona como una máscara del método recursivo privado insertarUtil. 
+\item private void insertarUtil(NodoAVL actual, int valor): Este método recursivo inicia sus llamados desde la raíz, sigue los siguientes pasos:
+\begin{enumerate}
+\item Se realiza la inserción al igual que se hace para un árbol de búsqueda binario:\\
+
+            1.1 Si el nodo especificado es nulo, se crea un nuevo nodo con el valor especificado y es regresado. Esto conforma el caso base del método recursivo. Tendremos que el nodo especificado es nulo cuando se inserte la raíz, o cuando se desee insertar un nuevo nodo y se haya encontrado su lugar en el árbol. \\
+            
+            1.2 Si el valor especificado es menor al valor del nodo actual (dentro de las llamadas recursivas), nos pasamos al hijo izquierdo del nodo actual y se hace el llamado recursivo de la función.\\
+
+            1.3 Si el valor especificado es mayor al valor del nodo actual, nos pasamos al hijo derecho del nodo actual y se hace el llamado recursivo de la función.\\
+            
+            1.4 Si el valor especificado es igual al valor del nodo actual (esto es, que ya existe en el árbol), imprime un mensaje alertando al usuario que ese valor ya existe.\\
+\item Una vez colocado en el árbol el nuevo nodo, se empieza a salir de los llamados recursivos. Se recorre desde el padre del nodo insertado, subiendo hasta la raíz. Para cada nodo recorrido se actualiza su altura. Para actualizar la altura, se utiliza el método privado mayor y el método privado getAltura. La altura actualizada del nodo actual es la altura mayor de sus dos hijos más uno (porque en esta implementación se empieza a contar la altura desde 1).
+\item Se calcula el factor de equilibrio del nodo actual (siguiendo la idea de que estamos saliendo de las llamadas recursivas y recorriendo los nodos desde el padre del nodo insertado hasta la raíz). Se utiliza como apoyo el método privado getFE.
+\item Se revisa la condición de equilibrio del nodo actual. Se puede presentar uno de los siguientes casos:\\
+
+            4.1 El FE del nodo actual es 2 y el FE de su hijo izquierdo es 1: se hace la rotación simple a la derecha. \\
+            
+            4.2 El FE del nodo actual es -2 y el FE de su hijo izquierdo es -1: se hace la rotación simple a la izquierda \\
+
+            4.3 El FE del nodo actual es 2 y el FE de su hijo izquierdo es -1: se hace la rotación doble a la derecha.\\
+            
+            4.4 El FE del nodo actual es -2 y el FE de su hijo izquierdo es 1: se hace la rotación doble a la izquierda.\\
+\item La inserción finaliza cuando el nodo actual ha regresado hasta la raíz (fin de las llamadas recursivas).
+\end{enumerate}
+\item private int mayor(int a, int b): Devuelve el número mayor entre dos números especificados. Concretamente se utiliza para encontrar la mayor de las alturas de los hijos de un nodo.
+\item private getAltura(NodoAVL actual): Funciona para obtener la altura de un nodo, validando los casos en los que el nodo especificado es 0 (para evitar el NullPointerException). 
+\item private int getFE(NodoAVL actual): Retorna el resultado de obtener la fórmula $FE = H_{R_I} - H_{R_D}$
+aplicada al nodo actual.
+\item private NodoAVL rotacionD(NodoAVL actual): Se supone el caso donde el FE del nodo actual es 2, y el FE de su hijo izquierdo es 1. Para esta rotación se realiza lo siguiente:
+\begin{enumerate}
+\item Se crea una nueva referencia para el hijo izquierdo del nodo actual, que se colocará como “nueva raíz” de este subárbol.
+\item Se guardar en un nodo temporal al hijo derecho de la nueva raíz
+\item Ahora se realiza la rotación, se hace el intercambio de la nueva raíz con el nodo actual: el nodo actual pasa a la posición del hijo derecho de la nueva raíz, y la referencia temporal pasa a ser el hijo izquierdo del nodo actual
+\item Se actualizan las alturas tanto del nodo actual como del nuevo.
+\item Se retorna la nueva raíz del subárbol. 
+\end{enumerate}
+\item private NodoAVL rotacionI(NodoAVL actual): Se supone el caso donde el FE del nodo actual es -2, y el FE de su hijo derecho es -1. Para esta rotación se realiza lo siguiente:
+\begin{enumerate}
+\item Se crea una nueva referencia para el hijo derecho del nodo actual, que se colocará como “nueva raíz” de este subárbol.
+\item Se guardara en un nodo temporal al hijo izquierdo de la nueva raíz.
+\item Ahora se realiza la rotación, se hace el intercambio de la nueva raíz con el nodo actual: el nodo actual pasa a la posición del hijo izquierdo de la nueva raíz, y la referencia temporal pasa a ser el hijo derecho del nodo actual.
+\item Se actualizan las alturas tanto del nodo actual como del nuevo.
+\item Se retorna la nueva raíz del subárbol.
+\end{enumerate}
+\item public void eliminar(int clave):  Realiza la eliminación de un nodo con la clave especificada (se asume que la clave existe en el árbol), manteniendo las condiciones de equilibrio. Este método funciona como una máscara del método recursivo privado eliminarUtil. 
+\item public NodoAVL eliminarUtil(NodoAVL actual, int clave): Este método recursivo inicia sus llamados desde la raíz y sigue los siguientes pasos:
+\begin{enumerate}
+\item Se empieza la eliminación al igual que se hace para un árbol de búsqueda binario:\\
+
+            1.1 Si el nodo especificado es nulo, se regresa como valor de retorno. Esto conforma el caso base del método recursivo (recordando que el árbol se reconstruye al llegar a la última llamada recursiva y regresar el recorrido de los nodos al ir saliendo de los llamados). Tendremos que el nodo especificado es nulo cuando el árbol está vacío, o cuando se haya recorrido todo el árbol y no se haya encontrado el valor (en este caso el árbol se reconstruirá tal y como estaba). \\
+            
+            1.2 Si la clave especificada es menor a la clave del nodo actual (dentro de las llamadas recursivas), nos pasamos al hijo izquierdo del nodo actual y se hace el llamado recursivo de la función\\
+
+            1.3 Si la clave especificada es mayor a la clave del nodo actual, nos pasamos al hijo derecho del nodo actual y se hace el llamado recursivo de la función.\\
+            
+            1.4 Si el valor especificado es igual al valor del nodo actual (esto es, que ya se encontró el nodo a eliminar), se verifica cuál de los siguientes casos se presenta:\\
+            
+\hspace{1cm} 1.4.1 El nodo a eliminar no tiene hijos (es una hoja). Se elimina directamente el
+
+\hspace{1.8cm} nodo. Esto hace que terminen las llamadas recursivas\\
+
+\hspace{1cm}1.4.2 El nodo a eliminar tiene solo un hijo (izquierdo o derecho). Si tiene el hijo 
+
+\hspace{1.8cm}izquierdo, se crea un nodo temporal para guardar la referencia del hijo (subárbol) 
+
+\hspace{1.8cm}derecho. Caso contrario, se guarda en el nodo temporal la referencia del hijo
+
+\hspace{1.8cm}(subárbol) izquierdo. El nodo actual pasa a ser la referencia de su hijo que se 
+
+\hspace{1.8cm}guardo en el nodo temporal.\\
+
+\hspace{1cm} 1.4.3 El nodo a eliminar tiene sus dos hijos. Al igual que en los árboles binarios de 
+
+\hspace{1.8cm}búsqueda, se busca al predecesor del nodo (nodo más a la derecha del subárbol 
+
+\hspace{1.8cm}izquierdo). Para buscar al predecesor se utiliza el método privado getPredecesor. 
+
+\hspace{1.8cm}Luego, se copia la clave del predecesor en el nodo actual y se hace un llamado
+
+\hspace{1.8cm}recursivo de eliminación en el hijo izquierdo del nodo actual para eliminar al predecesor.\\
+
+\item Una vez se ha eliminado el nodo, se empieza a salir de los llamados recursivos. Se recorre desde el padre del nodo eliminado, subiendo hasta la raíz. Para cada nodo recorrido se actualiza su altura. Para actualizar la altura, se utiliza el método privado mayor y el método privado getAltura. La altura actualizada del nodo actual es la altura mayor de sus dos hijos más uno (porque en esta implementación se empieza a contar la altura desde 1).
+\item Se calcula el factor de equilibrio del nodo actual (siguiendo la idea de que estamos saliendo de las llamadas recursivas y recorriendo los nodos desde el padre del nodo insertado hasta la raíz). Se utiliza como apoyo el método privado getFE.
+\item Se revisa la condición de equilibrio del nodo actual.  Los casos que se presentan son los mismos que para la inserción y se resuelven de la misma manera.
+\item La eliminación termina cuando se ha regresado hasta la raíz en las llamadas recursivas.
+\end{enumerate}
+\item private NodoAVL getPredecesor(NodoAVL nodo): Recorre iterativamente los hijos derechos del nodo especficado (mientras los tenga). Regresa el nodo más a la derecha encontrado.
+\end{itemize}
+\newpage
+\subsection{Heap}
+\vspace{5mm} %5mm vertical space
+
+\textbf{Clase Heap}\\
+
+Esta clase define los métodos necesarios para la creación de un MAX HEAP a partir de los 
+ elementos o claves ingresados por el usuario.\\
+
+\textit{\textbf{Atributos}}
+\begin{itemize}
+\item Nodo(). Para definir el valor que le será asignado a la variable.
+\item Nodo root. Para asignarle la raíz al árbol según el algoritmo.
+\item int val. Referencia al número que el usuario ingrese.
+\end{itemize}
+
+\textit{\textbf{Constructores}}
+\begin{itemize}
+    \item publicHeap().Constructor default del Heap.
+    \item Heap(int val). Constructor que define un nuevo nodo según el valor asignado.
+\end{itemize}Heap(Nodo root). Constructor que define la instancia de la raíz del heap.
+
+\textit{\textbf{Métodos}}
+\begin{itemize}
+\item printHeap(). Se encarga de imprimir el heap dadas las claves ordenadas de acuerdo al método heapify(que se encarga de mantener las propiedades de un max heap, donde para todas las claves que se revisen, el valor del padre debe ser siempre mayor) también definido en esta clase. 
+\item Heapify(). Se encarga de crear esta estructura de datos no lineal en donde reordenar las claves ingresadas para mantener las propiedades de una max heap, donde definimos al nodo izquierdo y derecho según su fórmula equivalente para realizar de manera recursiva el reordenamiento de la clave ingresada y asignarla al subárbol izquierdo o derecho.
+\begin{enumerate}
+    \item El algoritmo de este método analiza el primer hijo derecho cuyo índice viene dado por n/2 - 1
+    \item Establece la clave que se está analizando como largest
+    \item Si el hijo izquierdo es mayor que su padre entonces establece esta clave como mayor
+    \item Si el hijo derecho es mayor que la clave que se está analizando entonces definimos a la clave que se encuentra en el hijo derecho como largest    
+    \item Se hace el intercambio con largest con el padre 
+    \item Este proceso se realiza de manera recursiva para todas las claves ingresadas.
+\end{enumerate}
+\item buildHeap(). Recorre la lista en la que los elementos se almacenan conforme se van ingresando mientras que los va ordenando de forma en que la raíz de cada heap sea mayor a sus hijos.
+\item Delete(). Encargado de la eliminación de una clave, ya sea raíz, hijo derecho o hijo izquierdo de acuerdo con las reglas de eliminación de un heap, donde para la eliminación de la raíz se reemplaza con el elemento que ocupa la última posición del heap lo más abajo y a la derecha posible, verificando si el valor de la nueva raíz es menor que el valor más grande entre sus hijos, en tal caso, se realiza un intercambio, repitiendo este proceso recursivo.
+\begin{enumerate}
+    \item Si el nodo a ser eliminado es una hoja, lo elimina directamente
+    \item Si el nodo a eliminar es un hijo derecho o un hijo izquierdo, realiza un intercambio con ayuda del método heapify() con la clave que ocupa la última posición del heap lo más abajo y a la derecha posible,
+\end{enumerate}
+    
+\item Insert(). Método que realiza la inserción de los elementos de acuerdo a las reglas de ordenamiento de un MAX Heap:
+\begin{enumerate}
+\item Definimos una variable que nos devuelva el tamaño de la lista.
+\item Si es el primer elemento a insertar lo añade a la primera posición disponible
+\begin{itemize}
+\item Si no se cumple, entonces inserta la clave ingresada en la primera posición disponible lo más abajo y a la izquierda posible
+\item Se verifica si la clave es mayor que el padre, en tal caso intercambia los elementos haciendo una llamada al método que es el encargado de realizar laa asignacióm.
+\end{itemize}
+\item Este proceso se realiza de manera recursiva
+\end{enumerate}
+
+\item defNodo().  Método que define a los nodos derecho e izquierdo, así como la raíz del heap, de acuerdo a las características de un MAX Heap, donde en una nueva lista asignamos a los hijos izquierdos y derechos de acuerdo con las operaciones necesarias para definir tanto hijo izquierdo como derecho en su inserción de claves.
+\begin{enumerate}
+\item Inicializamos los nodos derecho e izquierdo respectivamente con el indice que tendrá el nodo, left (2*i) + 1 haciendo referencia al subárbol izquierdo, right (2*i) + 2 haciendo referencia al subárbol derecho.
+\item Le asignamos el índice que tendrán los hijos derecho e izquierdo
+\item Le asignamos el índice correspondiente a la raíz.
+\end{enumerate}
+\end{itemize}
+
+\textbf{Clase Nodo}\\
+
+Esta clase define los getters y setters de los nodos, así como los valores de retorno necesarios para la ejecución exitosa del programa.\\
+
+\textit{\textbf{Atributos}}
+\begin{itemize}
+\item intValor(). Variable que le asignará un valor a un nuevo nodo
+\item Nodo izq : Inicializa el valor del nodo izquierdo en null.
+\item Nodo der : Inicializa el valor del nodo izquierdo en null.
+\end{itemize}
+
+\textit{\textbf{Constructores}}
+\begin{itemize}
+    \item Nodo(Nodo nodo): constructor default de la clase.
+    \item Nodo(int data): inicializa los valores del nodo derecho e izquierdo en null.
+    \item Nodo(int data, Nodo lt, Nodo rt): inicializa las variables a utilizar en null.
+\end{itemize}
+
+\textit{\textbf{Métodos}}
+\begin{itemize}
+    \item setIzq(Nodo izq). Método que define la instancia izquierda en el heap (Nodo izquierdo).
+    \item setIzq(Nodo izq). Método que define la instancia derec en el heap (Nodo derecho)
+    
+\end{itemize}
+\newpage
+\subsection{Árbol de expresión aritmética}
+\vspace{5mm} %5mm vertical space
+Conociendo los requerimientos para construir un árbol de expresión aritmética, primeramente, se dividió el caso en tres casos:
+\begin{itemize}
+\item \textbf{Mejor caso.} El usuario introduce una expresión aritmética correcta (operadores de un solo dígito, contenida en paréntesis con operaciones internas igualmente contenidas en paréntesis). Ejemplo:
+\begin{center}
+ ((2*4+5)/(9-2)*(9+3+2))   
+\end{center}
+\item \textbf{Caso Promedio.} El usuario introduce un carácter erróneo. Ejemplo:
+\begin{center}
+ ([9+3)/(2+1))  
+\end{center}
+\item \textbf{Peor caso.} El usuario introduce cualquier cosa excepto una expresión aritmética correcta. Ejemplo:
+\begin{center}
+ Akd8)03l
+ \end{center}
+\end{itemize}
+Con base en estos casos se creará una excepción que arrojarán los métodos implementados.\\
+
+A continuación, se realiza una descripción de la forma en la que se implementaron las clases
+del programa, describiendo sus métodos y atributos.\\
+
+\textbf{Clase NodoExpresion.}\\
+
+Es la clase encargada de construir los nodos del árbol.\\
+
+\textit{\textbf{Atributos}}
+\begin{itemize}
+\item \textbf{Object} valor: Es el valor que contendrá el nodo. De tipo Object para poder asignar cualquier referencia de objeto al dato.
+\item \textbf{NodoExpresion} izq: Corresponde al hijo izquierdo del nodo.
+\item \textbf{NodoExpresion} der: Corresponde al hijo derecho del nodo.
+\end{itemize}
+\vspace{5mm} %5mm vertical space
+\textit{\textbf{Constructores}}
+\begin{itemize}
+\item \textbf{NodoExpresion()} Constructor por defecto de un Nodo, asignando null a los hijos del nodo.
+\item \textbf{NodoExpresion} (Object Valor) Constructor para crear un Nodo asignando el dato que contendrá.
+\end{itemize}
+\vspace{5mm} %5mm vertical space
+\textit{\textbf{Métodos}}
+\begin{itemize}
+    \item public  void setIzq(NodoExpresion izq). Asigna el hijo izquierdo de un nodo.
+    \item public void setDer(NodoExpresion der). Asigna el hijo derecho de un nodo.
+\end{itemize}
+
+\textbf{Clase ArbolExpresión.}\\
+
+Es la clase encargada de crear el árbol de expresión, así como de resolver la expresión ingresada.\\
+
+\textit{\textbf{Atributos}}
+\begin{itemize}
+\item \textbf{NodoExpresion} root. Corresponde al nodo raíz del árbol
+\end{itemize}
+\vspace{5mm} %5mm vertical space
+\textit{\textbf{Constructores}}
+\begin{itemize}
+\item \textbf{ArbolExpresion()} Es el método constructor vacío por defecto. 
+\item \textbf{ArbolExpresion} (String cadena) Método que a partir de una expresión ingresada creará el árbol de expresión correspondiente.
+\end{itemize}
+\vspace{5mm} %5mm vertical space
+\textit{\textbf{Métodos}}
+\begin{itemize}
+    \item public void BFS(). Se encarga de realizar el recorrido por capas del árbol, visitando cada nodo por lo menos una vez y mostrándolo.
+    \item static void visitar(NodoExpresion n). Se encarga de marcar y mostrar el nodo visitado.
+    \item private static int Prioridad(char operador). Como se vio anteriormente, los operadores de una expresión aritmética tiene cierta prioridad unos con otros para ir realizando las operaciones en orden. Este método se encarga de asignar dicha prioridad dependiendo el operador. Prioridad ascendente: +, -, /, *.
+    \item private static boolean Operador(char carácter). Método encargado de verificar si el carácter analizado es un operador.
+    \item static NodoExpresion crearArbol(String expresion). Es el método encargado de realizar el proceso de conversión de la expresión a Árbol de expresión mediante el algoritmo explicado con anterioridad. Este método arroja una excepción en el caso de que la cadena contenga un carácter fuera del rango permitido para la expresión aritmética.
+\begin{enumerate}
+\item Se lee la cadena y se analiza carácter por carácter.
+\item Se crea un nuevo nodo por cada carácter.
+\begin{enumerate}
+\item Se verifica si el carácter se encuentra dentro del rango. De lo contrario se lanza un mensaje de error.
+\item Se verifica si el carácter es o no es un operador
+\end{enumerate}
+\item Se apilan los nodos
+\begin{enumerate}
+\item Si el carácter corresponde a un paréntesis de apertura se apila en la pila de operadores.
+\item Si el carácter corresponde a un operando, se apila en la pila de expresiones.
+\item Si nos encontramos con un operador se comprueba si su prioridad es menor a la del último operador en la pila, si es así, a este operador se le asignan sus hijos desapilando los dos últimos operandos de la pila de expresiones. Hecho esto, se apila el nodo resultante.
+\item El proceso se repite para los demás operadores.
+\item Al encontrar un paréntesis que cierra la expresión se termina el proceso y se desapilan los paréntesis sin asignarse a alguna variable.
+\end{enumerate}
+\item Se retorna el nodo resultante que corresponde al árbol creado.
+\end{enumerate}
+\item static float resolver(String cadena). Tras obtener la notación postfija de la expresión, este método será el encargado de aplicar el algoritmo de notación polaca inversa con una pila.
+\begin{enumerate}
+\item Se lee la cadena y analiza carácter por carácter.
+\begin{enumerate}
+\item Se verifica si corresponde a un operador u operando por medio de su prioridad. Si esta es diferente de 0 indica que es un operador.
+\end{enumerate}
+\item Se apilan los caracteres.
+\begin{enumerate}
+\item Si corresponde a un operando, se apila su referencia menos su valor ASCII para obtener su valor flotante.
+\item Si corresponde a un operador se desapilan dos elementos de la pila y de acuerdo al operador por medio del método operar se realiza la operación correspondiente, el resultado se apila.
+\item Se repite el proceso con los resultados que se encuentren en la pila.
+\end{enumerate}
+\item Se retira el último elemento de la pila que corresponde al resultado final.
+\end{enumerate}
+\item private  static float operar(char operador, float operando1, float operando2). Se encarga de comprobar qué operador se esta recibiendo para así aplicarlo.
+\item public static void postOrden(NodoExpresion raiz). Método encargado de realizar el recorrido postOrden del árbol.
+\item public  static String posOrdenString(NodoExpresion raiz, String c). El método se encarga de regresar como cadena de caracteres al recorrido postOrden para así poder ser utilizado en la resolución de la expresión.
+\end{itemize}
+
+\textbf{Clase excepcionCaracter.}\\
+
+Clase que hereda a la clase “Exception”, encargada de controlar la excepción en el caso de que se meta un carácter incorrecto.\\
+
+\vspace{5mm} %5mm vertical space
+\textit{\textbf{Constructores}}
+\begin{itemize}
+\item \textbf{excepcionCaracter()} Método constructor por defecto.
+\item \textbf{excepcionCaracter()} Método constructor del que se hereda atributo de la clase Exception. 
+\end{itemize}
+\newpage
+\section{Conclusiones}
+
+\textbf{Barrios Aguilar Dulce Michelle}\\
+
+Entender inicialmente la metodología que sigue un conjunto finito de elementos puede llegar a complicarse al relacionarlo con la creación de una estructura no lineal como son los árboles, donde los nodos son precisamente este conjunto finito en el que puede ser relacionado de distintas maneras según las características del tipo de árbol en el que se implemente. 
+El hecho de comprender la estructura que se sigue para la construcción de un árbol binario y además el trabajar con estas 3 implementaciones en las que analizamos diferencias muy marcadas entre ellas, expande el panorama hacia las diversas aplicaciones en las que podríamos llegar a utilizarlas para resolver diversos problemas relacionados con el manejo y la jerarquía de información en los que podemos obtener una representación de dicha información según las necesidades y requerimientos que se soliciten con un tiempo de acceso relativamente bajo. . \\
+
+\textbf{Chong Hernández Samuel}\\
+En clase se vieron variantes de los árboles binarios, sean estas el árbol binario de búsqueda, heaps y de expresión; con este proyecto y la tarea respecto a árboles nos podemos dar cuenta de la amplia variedad en cuanto a las variantes de árboles binarios y sus múltiples aplicaciones, indicándonos que esta estructura de datos es fundamental. Esto es importante, ya que como ingenieros en computación tendremos que idear soluciones para los problemas que se nos presenten y dada la estructura jerárquica de los árboles binarios es necesario que sepamos implementarlos y manejarlos para formular dichas soluciones.
+Puedo concluir que se cumple con el objetivo, ya que no solamente pudimos implementar variantes de árboles binarios para la solución del proyecto, sino que pudimos desarrollar nuestro trabajo en equipo a través del apoyo proporcionado por cada uno de los integrantes para sacar adelante cada aspecto requerido.\\
+
+\textbf{Mendoza Hernández Carlos Emiliano}\\
+Las estructuras de datos no lineales permiten aplicaciones más complejas que las no lineales. Una de estas estructuras, los árboles, en su forma binaria (con máximo dos hijos) da pie a diversas variaciones entre las que se destacan el heap, el árbol binario de búsqueda, el árbol AVL, el árbol de expresiones aritméticas, entre otros. Estos árboles se caracterizan por ser estructuras recursivas, y se crearon con el propósito de hacer operaciones en un tiempo razonable. En esta práctica fue posible hacer tres implementaciones básicas de estos árboles, sin embargo, sus aplicaciones en el mundo real son bastante amplias. Considero que si bien puede ser complejo implementar sus algoritmos, el tiempo en el que realizan sus operaciones hace que valga la pena su uso. Al mismo tiempo, se realizaron las implementaciones con un enfoque orientado a objetos. Por estas razones, considero que se cumplieron los objetivos del proyecto.
+
+\newpage
+\section{Referencias}
+
+\begin{enumerate}
+    \item Cairó, O., Guardati, S. (2010). Estructuras de datos. (3a. ed.) McGrawHill.
+    \item Edgar Tista García [Prof. Edgar Tista]. (2020 septiembre 29). Heapsort. [Video]. Recuperado de https://youtu.be/uFTLwNe3P1o
+    \item Edgar Tista García [Prof. Edgar Tista]. (2022 Febrero 13). ¿Qué es un heap?. [Video]. Recuperado de https://youtu.be/Gtwg5eus5Gc
+    \item Team, D. S. (2022, 2 junio). Implementación del Heap Mínimo y del Heap Máximo – Cómo funciona todo. DATA SCIENCE. https://datascience.eu/es/programacion/implementacion-del-heap-minimo-y-del-heap-maximo-como-funciona-todo/
+    \item Alonso, J. A. (2017, Enero 27). Notación Polaca Inversa. Exercitium. Recuperado diciembre 4, 2022, de https://www.glc.us.es/~jalonso/exercitium/notacion-polaca-inversa/
+    \item Árboles de expresion - ISC. Mendez-PORTAFOLIO. Google Sites: Sign-in. (n.d.). Recuperado Diciembre 4, 2022, de https://sites.google.com/site/iscmendezportafolio/arboles-de-expresion
+    \item Construcción de un árbol de expresión. (n.d.). Recuperado Diciembre 4, 2022, de https://www.techiedelight.com/es/expression-tree/
+
+    
+\end{enumerate}
+
+\end{document}
